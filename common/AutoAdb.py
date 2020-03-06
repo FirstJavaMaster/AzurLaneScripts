@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import time
 
 import cv2
 
@@ -79,7 +80,7 @@ class AutoAdb:
             return None
         return max_loc
 
-    def click(self, temp_image_name, threshold=threshold):
+    def click(self, temp_image_name, threshold=threshold, wait_time=0.5):
         loc = self.get_location(temp_image_name, threshold)
         if loc is None:
             return False
@@ -89,6 +90,7 @@ class AutoAdb:
         x = loc[0] + w / 2
         y = loc[1] + h / 2
         self.run('shell input tap %s %s' % (x, y))
+        time.sleep(wait_time)
         return True
 
 
