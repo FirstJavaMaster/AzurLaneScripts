@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
-import time
 from datetime import datetime
 
 import cv2
 
 import config
+from common.Location import Location
 
 
 class AutoAdb:
@@ -52,7 +52,12 @@ class AutoAdb:
             print('找到 %s 个设备, 无法处理. 请保证只有一个设备存在' % (number - 1))
             exit(1)
         print('设备已连接', end='\n\n')
-        self.test_screen()
+
+        output = self.run('shell wm size')
+        print('屏幕分辨率: ' + output)
+        if 'Physical size: 1280x720' not in output:
+            print('请将分辨率设置为 1280x720 (横向 平板模式)')
+            exit(1)
 
         output = self.run('shell wm density')
         print("像素密度: " + output)
@@ -61,57 +66,59 @@ class AutoAdb:
         output = self.run('shell getprop ro.build.version.release')
         print('系统版本: ' + output)
 
-    def test_screen(self):
-        output = self.run('shell wm size')
-        print('屏幕分辨率: ' + output)
-        if 'Physical size: 1280x720' not in output:
-            print('请将分辨率设置为 1280x720 (横向 平板模式)')
-            exit(1)
-
     def screen_cap(self):
         self.run('exec-out screencap -p > ' + self.screen_pic_path)
 
     def get_location(self, temp_rel_path, threshold=threshold):
+        temp_abs_path = config.get_abs_path(temp_rel_path)
         self.screen_cap()
 
         sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
-        temp_gray = cv2.imread(config.get_abs_path(temp_rel_path), cv2.COLOR_BGR2BGRA)
+        temp_gray = cv2.imread(temp_abs_path, cv2.COLOR_BGR2BGRA)
 
         res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(res)
         if max_val < threshold:
             return None
-        return max_loc
+
+        h, w, _ = cv2.imread(temp_abs_path).shape
+        x = max_loc[0] + w / 2
+        y = max_loc[1] + h / 2
+        return Location(self, temp_abs_path, x, y)
 
     def check(self, temp_rel_path):
-        res = self.get_location(temp_rel_path)
-        return res is not None
+        loc = self.get_location(temp_rel_path)
+        return loc is not None
 
-    def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
-        temp_abs_path = config.get_abs_path(temp_rel_path)
-        loc = self.get_location(temp_abs_path, threshold)
-        if loc is None:
-            print('click [×] ' + temp_abs_path)
-            return False
-
-        img = cv2.imread(temp_abs_path)
-        h, w, _ = img.shape
-        x = loc[0] + w / 2
-        y = loc[1] + h / 2
-        self.run('shell input tap %s %s' % (x, y))
-        print('click [√] ' + temp_abs_path)
-        time.sleep(wait_time)
-        return True
-
-    def click_finally(self, temp_rel_path, threshold=threshold, wait_time=wait_time, max_wait_time=None):
+    def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None):
+        print('wait (%s) ' % temp_rel_path, end='')
         start_time = datetime.now()
         while True:
-            res = self.click(temp_rel_path, threshold, wait_time)
-            if res:
-                return True
             if max_wait_time is not None and (datetime.now() - start_time).seconds > max_wait_time:
-                print('超出等待时间')
-                return False
+                print(' not found!')
+                return Location(self, None, None, None)
+
+            print('...', end='')
+            loc = self.get_location(temp_rel_path, threshold)
+            if loc is not None:
+                print(' found!')
+                return loc
+
+    # def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
+    #     temp_abs_path = config.get_abs_path(temp_rel_path)
+    #     loc = self.get_location(temp_abs_path, threshold)
+    #     if loc is None:
+    #         print('click [×] ' + temp_abs_path)
+    #         return False
+    #
+    #     img = cv2.imread(temp_abs_path)
+    #     h, w, _ = img.shape
+    #     x = loc[0] + w / 2
+    #     y = loc[1] + h / 2
+    #     self.run('shell input tap %s %s' % (x, y))
+    #     print('click [√] ' + temp_abs_path)
+    #     time.sleep(wait_time)
+    #     return True
 
 
 if __name__ == '__main__':
