@@ -4,34 +4,45 @@ import os
 # 用户自定义配置区域
 adb_path = r'D:\AndroidSDK\platform-tools\adb.exe'
 
+
 ###
-
-# 常量区域
-KEY_WORK_DIR = 'work_dir'
-KEY_CACHE_DIR = 'cache_dir'
-
 
 ###
 
 # 方法区
-def __init_file__():
+
+# 获取项目路径
+def get_work_dir():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+# 获取项目的缓存路径
+def get_cache_dir():
+    return get_work_dir() + '/cache'
+
+
+# 根据相对路径生成绝对路径
+def get_abs_path(*rel_paths):
+    return os.path.join(get_work_dir(), *rel_paths)
+
+
+def init_config():
     print('配置初始化中...')
-    work_dir = os.getcwd()
+    work_dir = get_work_dir()
     print('脚本工作路径: ' + work_dir)
-    cache_dir = os.path.join(work_dir, 'cache')
+    cache_dir = get_cache_dir()
     print('缓存文件路径: ' + cache_dir)
     print()
 
     data = {
-        KEY_WORK_DIR: work_dir,
-        KEY_CACHE_DIR: cache_dir
+        'version': 0.1
     }
 
-    with open('cache/runtime.json', 'w') as json_file:
+    with open(cache_dir + '/runtime.json', 'w') as json_file:
         json.dump(data, json_file)
 
 
 def get(key):
-    with open('cache/runtime.json') as json_file:
+    with open(get_cache_dir() + '/runtime.json') as json_file:
         data = json.load(json_file)
         return data[key]

@@ -2,6 +2,7 @@
 import os
 import subprocess
 import time
+from datetime import datetime
 
 import cv2
 
@@ -9,19 +10,20 @@ import config
 
 
 class AutoAdb:
-    threshold = 0.9
-    screen_pic_path = config.get(config.KEY_CACHE_DIR) + '/screen.png'
+    threshold = 0.8
+    wait_time = 1
+    screen_pic_path = config.get_cache_dir() + '/screen.png'
 
-    def __init__(self):
+    def __init__(self, test_device=False):
         # 如果没有配置的话则从系统环境变量中获取
         adb_path = config.adb_path if config.adb_path else 'adb'
         try:
             subprocess.Popen([adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             self.adb_path = adb_path
-            print('ADB PATH >>>> ' + self.adb_path, end='\n\n')
 
-            # 初始化时验证设备连接情况
-            self.test_device()
+            if test_device:
+                # 初始化时验证设备连接情况
+                self.test_device()
         except OSError:
             print('请配置ADB路径或将其配置到环境变量中')
             print('可参考下文中的相关说明: https://github.com/wangshub/wechat_jump_game/wiki')
@@ -34,7 +36,8 @@ class AutoAdb:
         return output
 
     def test_device(self):
-        print('检查设备是否连接...')
+        print('检查设备 ...')
+        print('ADB PATH >>>> ' + self.adb_path, end='\n\n')
         command_list = [self.adb_path, 'devices']
         process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = process.communicate()
@@ -68,11 +71,11 @@ class AutoAdb:
     def screen_cap(self):
         self.run('exec-out screencap -p > ' + self.screen_pic_path)
 
-    def get_location(self, temp_image_name, threshold=threshold):
+    def get_location(self, temp_rel_path, threshold=threshold):
         self.screen_cap()
 
         sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
-        temp_gray = cv2.imread(config.get(config.KEY_WORK_DIR) + '/temp_images/' + temp_image_name, cv2.COLOR_BGR2BGRA)
+        temp_gray = cv2.imread(config.get_abs_path(temp_rel_path), cv2.COLOR_BGR2BGRA)
 
         res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(res)
@@ -80,18 +83,35 @@ class AutoAdb:
             return None
         return max_loc
 
-    def click(self, temp_image_name, threshold=threshold, wait_time=0.5):
-        loc = self.get_location(temp_image_name, threshold)
+    def check(self, temp_rel_path):
+        res = self.get_location(temp_rel_path)
+        return res is not None
+
+    def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
+        temp_abs_path = config.get_abs_path(temp_rel_path)
+        loc = self.get_location(temp_abs_path, threshold)
         if loc is None:
+            print('click [×] ' + temp_abs_path)
             return False
 
-        img = cv2.imread(config.get(config.KEY_WORK_DIR) + '/temp_images/' + temp_image_name)
+        img = cv2.imread(temp_abs_path)
         h, w, _ = img.shape
         x = loc[0] + w / 2
         y = loc[1] + h / 2
         self.run('shell input tap %s %s' % (x, y))
+        print('click [√] ' + temp_abs_path)
         time.sleep(wait_time)
         return True
+
+    def click_finally(self, temp_rel_path, threshold=threshold, wait_time=wait_time, max_wait_time=None):
+        start_time = datetime.now()
+        while True:
+            res = self.click(temp_rel_path, threshold, wait_time)
+            if res:
+                return True
+            if max_wait_time is not None and (datetime.now() - start_time).seconds > max_wait_time:
+                print('超出等待时间')
+                return False
 
 
 if __name__ == '__main__':
