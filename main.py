@@ -29,9 +29,9 @@ def run():
 
         # 找到敌人后开始出击
         auto_adb.wait('temp_images/fight.png').click()
+        check_port_full()
 
-        print('战斗开始 ...', end='')
-
+        print('战斗开始 ...')
         fight_finish_loc = auto_adb.wait('temp_images/fight-finish.png')
         print(' 战斗结束 !')
         fight_finish_loc.click()
@@ -51,6 +51,9 @@ def provoke_enemy():
         loc = auto_adb.get_location(image_rel_path)
         if loc is not None:
             loc.click()
+            # 处理途中获得道具的提示
+            auto_adb.wait('temp_images/get-tool.png', max_wait_time=3).click()
+            loc.click()
             return True
     # todo 尝试滑动界面
     print('找不到敌机')
@@ -60,15 +63,19 @@ def provoke_enemy():
 # 选择关卡
 def pick_round():
     auto_adb = AutoAdb()
-    res = auto_adb.wait('temp_images/in-round.png', max_wait_time=5).click()
+    res = auto_adb.wait('temp_images/in-round.png', max_wait_time=5).is_valuable()
     if res:
         return
 
+    check_port_full()
     # 确定进入
-    auto_adb.wait('temp_images/round/3-4.png').click()
+    auto_adb.wait('temp_images/round/4-3.png').click()
     auto_adb.wait('temp_images/fight-confirm.png').click()
 
-    # 判断船坞是否满员
+
+# 判断船坞是否满员
+def check_port_full():
+    auto_adb = AutoAdb()
     port_full = auto_adb.check('temp_images/port-full.png')
     if port_full:
         print('船坞已经满员了, 请整理')

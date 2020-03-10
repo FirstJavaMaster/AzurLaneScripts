@@ -17,12 +17,15 @@ class Location:
         self.pos_x = pos_x
         self.pos_y = pos_y
 
+    def is_valuable(self):
+        return self.pos_x is not None
+
     def click(self, wait_time=wait_time):
         if self.pos_x is None:
             return False
 
         self.auto_adb.run('shell input tap %s %s' % (self.pos_x, self.pos_y))
-        print('click [√] ' + self.temp_abs_path)
+        print('click ' + self.temp_abs_path)
         time.sleep(wait_time)
         return True
 

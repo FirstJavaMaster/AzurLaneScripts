@@ -16,18 +16,9 @@ class AutoAdb:
 
     def __init__(self, test_device=False):
         # 如果没有配置的话则从系统环境变量中获取
-        adb_path = config.adb_path if config.adb_path else 'adb'
-        try:
-            subprocess.Popen([adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            self.adb_path = adb_path
-
-            if test_device:
-                # 初始化时验证设备连接情况
-                self.test_device()
-        except OSError:
-            print('请配置ADB路径或将其配置到环境变量中')
-            print('可参考下文中的相关说明: https://github.com/wangshub/wechat_jump_game/wiki')
-            exit(1)
+        self.adb_path = config.adb_path if config.adb_path else 'adb'
+        if test_device:
+            self.test_device()
 
     def run(self, raw_command):
         command = '{} {}'.format(self.adb_path, raw_command)
@@ -36,8 +27,15 @@ class AutoAdb:
         return output
 
     def test_device(self):
-        print('检查设备 ...')
         print('ADB PATH >>>> ' + self.adb_path, end='\n\n')
+        try:
+            subprocess.Popen([self.adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except OSError:
+            print('请配置ADB路径或将其配置到环境变量中')
+            print('可参考下文中的相关说明: https://github.com/wangshub/wechat_jump_game/wiki')
+            exit(1)
+
+        print('检查设备 ...')
         command_list = [self.adb_path, 'devices']
         process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = process.communicate()
@@ -91,17 +89,17 @@ class AutoAdb:
         return loc is not None
 
     def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None):
-        print('wait (%s) ' % temp_rel_path, end='')
+        print('wait %s ' % temp_rel_path, end='')
         start_time = datetime.now()
         while True:
             if max_wait_time is not None and (datetime.now() - start_time).seconds > max_wait_time:
-                print(' not found!')
+                print(' ×')
                 return Location(self, None, None, None)
 
             print('...', end='')
             loc = self.get_location(temp_rel_path, threshold)
             if loc is not None:
-                print(' found!')
+                print(' √')
                 return loc
 
     # def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
