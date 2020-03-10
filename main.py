@@ -90,12 +90,15 @@ def deal_accident_when_provoke_enemy():
 
 # 选择关卡
 def pick_round():
+    # 判断港口是否满员
+    check_port_full()
+
     auto_adb = AutoAdb()
-    res = auto_adb.wait('temp_images/round/in-round.png', max_wait_time=3).is_valuable()
+    # 判断是否已经在关卡中
+    res = auto_adb.check('temp_images/round/in-round.png')
     if res:
         return
 
-    check_port_full()
     # 确定进入
     auto_adb.wait('temp_images/round/4-2.png').click()
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
@@ -123,7 +126,7 @@ def go_to_main_page():
         if check:
             return True
 
-        res = auto_adb.wait('temp_images/home-page.png', max_wait_time=3).click()
+        res = auto_adb.click('temp_images/home-page.png')
         if res:
             print('回到首页')
             return True

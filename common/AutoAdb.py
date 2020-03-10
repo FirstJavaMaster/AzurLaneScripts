@@ -88,7 +88,13 @@ class AutoAdb:
         loc = self.get_location(temp_rel_path)
         return loc is not None
 
-    def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None):
+    def click(self, temp_rel_path, threshold=threshold):
+        loc = self.get_location(temp_rel_path, threshold)
+        if loc is None:
+            return False
+        return loc.click()
+
+    def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None, episode=None):
         print('wait %s ' % temp_rel_path, end='')
         start_time = datetime.now()
         while True:
@@ -97,26 +103,17 @@ class AutoAdb:
                 return Location(self, None, None, None)
 
             print('...', end='')
+            if episode is not None:
+                try:
+                    episode()
+                except Exception as e:
+                    print('过程方法执行异常')
+                    print(e)
+
             loc = self.get_location(temp_rel_path, threshold)
             if loc is not None:
                 print(' √')
                 return loc
-
-    # def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
-    #     temp_abs_path = config.get_abs_path(temp_rel_path)
-    #     loc = self.get_location(temp_abs_path, threshold)
-    #     if loc is None:
-    #         print('click [×] ' + temp_abs_path)
-    #         return False
-    #
-    #     img = cv2.imread(temp_abs_path)
-    #     h, w, _ = img.shape
-    #     x = loc[0] + w / 2
-    #     y = loc[1] + h / 2
-    #     self.run('shell input tap %s %s' % (x, y))
-    #     print('click [√] ' + temp_abs_path)
-    #     time.sleep(wait_time)
-    #     return True
 
 
 if __name__ == '__main__':
