@@ -9,7 +9,7 @@ class Location:
     pos_y = None
 
     # 默认等待时间
-    wait_time = 1
+    wait_time = 0.5
 
     def __init__(self, auto_adb, temp_abs_path, pos_x, pos_y):
         self.auto_adb = auto_adb
