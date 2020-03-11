@@ -4,16 +4,16 @@ import time
 
 class Location:
     auto_adb = None
-    temp_abs_path = None
+    temp_rel_path = None
     pos_x = None
     pos_y = None
 
     # 默认等待时间
     wait_time = 0.5
 
-    def __init__(self, auto_adb, temp_abs_path, pos_x, pos_y):
+    def __init__(self, auto_adb, temp_rel_path, pos_x, pos_y):
         self.auto_adb = auto_adb
-        self.temp_abs_path = temp_abs_path
+        self.temp_rel_path = temp_rel_path
         self.pos_x = pos_x
         self.pos_y = pos_y
 
@@ -25,7 +25,7 @@ class Location:
             return False
 
         self.auto_adb.run('shell input tap %s %s' % (self.pos_x, self.pos_y))
-        print('click ' + self.temp_abs_path)
+        print('click [ %d : %d ] %s' % (self.pos_x, self.pos_y, self.temp_rel_path))
         time.sleep(wait_time)
         return True
 

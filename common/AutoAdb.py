@@ -82,7 +82,7 @@ class AutoAdb:
         h, w, _ = cv2.imread(temp_abs_path).shape
         x = max_loc[0] + w / 2
         y = max_loc[1] + h / 2
-        return Location(self, temp_abs_path, x, y)
+        return Location(self, temp_rel_path, x, y)
 
     def get_location2(self, *temp_rel_path_list, threshold=threshold):
         self.screen_cap()
@@ -100,7 +100,7 @@ class AutoAdb:
             h, w, _ = cv2.imread(temp_abs_path).shape
             x = max_loc[0] + w / 2
             y = max_loc[1] + h / 2
-            return Location(self, temp_abs_path, x, y)
+            return Location(self, temp_rel_path, x, y)
         return None
 
     def check(self, temp_rel_path):

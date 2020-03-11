@@ -51,9 +51,9 @@ def provoke_enemy():
     auto_adb = AutoAdb()
     image_dir = 'temp_images/enemy'
     image_name_list = os.listdir(image_dir)
+    image_rel_path_list = [*map(lambda image_name: image_dir + '/' + image_name, image_name_list)]
 
     while True:
-        image_rel_path_list = map(lambda image_name: image_dir + '/' + image_name, image_name_list)
         enemy_loc = auto_adb.get_location2(*image_rel_path_list)
         if enemy_loc is None:
             check = auto_adb.check('temp_images/round/in-unit.png')
@@ -70,6 +70,9 @@ def provoke_enemy():
                                     episode=deal_accident_when_provoke_enemy).is_valuable()
         if is_valuable:
             return True
+        else:
+            # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
+            image_rel_path_list.remove(enemy_loc.temp_rel_path)
 
 
 # 处理进击时的意外情况
