@@ -96,7 +96,7 @@ def pick_round():
 
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
-    res = auto_adb.check('temp_images/round/in-round.png')
+    res = auto_adb.wait('temp_images/round/in-round.png', max_wait_time=2).is_valuable()
     if res:
         return
 
