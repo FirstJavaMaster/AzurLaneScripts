@@ -101,7 +101,7 @@ def pick_round():
         return
 
     # 确定进入
-    auto_adb.wait('temp_images/round/4-2.png').click()
+    auto_adb.wait('temp_images/round/target-round.png').click()
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
     auto_adb.wait('temp_images/round/into-confirm.png').click()
     auto_adb.wait('temp_images/round/into-confirm.png').click()
