@@ -24,20 +24,8 @@ def go_unit():
     while True:
         # 寻找敌人
         res = provoke_enemy()
-        if not res:  # 如果没找到敌人
-            check = auto_adb.check('temp_images/round/in-unit.png')
-            if check:
-                print('关卡已经结束')
-                return True
-            else:
-                print('关卡未结束但找不到敌人')
-                exit(1)
-
-        # 处理自律战斗的提示
-        res = auto_adb.wait('temp_images/fight/auto-fight-confirm-1.png', max_wait_time=3).click()
-        if res:
-            print('确认自律战斗')
-            auto_adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
+        if not res:
+            break
 
         # 找到敌人后开始出击
         auto_adb.wait('temp_images/fight/fight.png').click()
@@ -48,22 +36,22 @@ def go_unit():
         print(' 战斗结束 !')
         fight_finish_loc.click()
         auto_adb.wait('temp_images/fight/fight-finish-1.png').click()
-        auto_adb.wait('temp_images/fight/fight-finish-1.5.png', max_wait_time=3).click()
-        auto_adb.wait('temp_images/fight/fight-finish-2.png').click(3)
+        auto_adb.wait('temp_images/fight/fight-finish-2.png',
+                      episode=lambda: auto_adb.click('temp_images/fight/new-ship.png')).click(3)
+        # 可能出现紧急任务
+        auto_adb.wait('temp_images/fight/urgent-task.png', max_wait_time=2).click()
 
 
-# 招惹敌军
+# 招惹敌军.
+# True 说明已经找到
+# False 说明关卡结束, 未找到
+# 异常退出 说明关卡未结束, 可是无法分辨出敌人
 def provoke_enemy():
     auto_adb = AutoAdb()
     image_dir = 'temp_images/enemy'
     image_name_list = os.listdir(image_dir)
 
     while True:
-        # 处理途中获得道具的提示
-        auto_adb.wait('temp_images/round/get-tool.png', max_wait_time=1).click()
-        # 处理伏击
-        auto_adb.wait('temp_images/round/escape.png', max_wait_time=1).click()
-
         enemy_loc = None
         for image_name in image_name_list:
             image_rel_path = image_dir + '/' + image_name
@@ -71,10 +59,18 @@ def provoke_enemy():
             if enemy_loc is not None:
                 break
         if enemy_loc is None:
-            print('找不到敌机')
-            return False
+            check = auto_adb.check('temp_images/round/in-unit.png')
+            if check:
+                print('关卡已经结束')
+                return False
+            else:
+                print('关卡未结束但找不到敌人')
+                exit(1)
+
         enemy_loc.click()
-        is_valuable = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=2).is_valuable()
+        # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
+        is_valuable = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=5,
+                                    episode=deal_accident_when_provoke_enemy).is_valuable()
         if is_valuable:
             return True
 
@@ -82,10 +78,15 @@ def provoke_enemy():
 # 处理进击时的意外情况
 def deal_accident_when_provoke_enemy():
     auto_adb = AutoAdb()
+    # 自动战斗
+    res = auto_adb.click('temp_images/fight/auto-fight-confirm-1.png')
+    if res:
+        print('确认自律战斗')
+        auto_adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
     # 处理途中获得道具的提示
-    auto_adb.get_location('temp_images/round/get-tool.png').click()
+    auto_adb.click('temp_images/round/get-tool.png')
     # 处理伏击
-    auto_adb.wait('temp_images/round/escape.png', max_wait_time=1).click()
+    auto_adb.click('temp_images/round/escape.png')
 
 
 # 选择关卡
