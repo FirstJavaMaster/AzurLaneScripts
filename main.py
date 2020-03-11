@@ -1,4 +1,5 @@
 import os
+import time
 
 import config
 from common.AutoAdb import AutoAdb
@@ -108,6 +109,8 @@ def pick_round():
 
     # 确保已经进入关卡
     auto_adb.wait('temp_images/round/in-round.png')
+    # 这里要多等待一秒, 因为首次进入关卡会有个动画影响寻敌
+    time.sleep(1.5)
 
 
 # 判断船坞是否满员
