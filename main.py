@@ -49,6 +49,9 @@ def go_unit():
 # False 说明关卡结束, 未找到
 # 异常退出 说明关卡未结束, 可是无法分辨出敌人
 def provoke_enemy():
+    # 这里要多等待一秒, 因为经常会有个动画影响寻敌
+    time.sleep(1.5)
+
     auto_adb = AutoAdb()
     image_dir = 'temp_images/enemy'
     image_name_list = os.listdir(image_dir)
@@ -109,8 +112,6 @@ def pick_round():
 
     # 确保已经进入关卡
     auto_adb.wait('temp_images/round/in-round.png')
-    # 这里要多等待一秒, 因为首次进入关卡会有个动画影响寻敌
-    time.sleep(1.5)
 
 
 # 判断船坞是否满员
