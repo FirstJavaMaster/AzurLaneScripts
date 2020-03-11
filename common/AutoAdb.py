@@ -84,6 +84,25 @@ class AutoAdb:
         y = max_loc[1] + h / 2
         return Location(self, temp_abs_path, x, y)
 
+    def get_location2(self, *temp_rel_path_list, threshold=threshold):
+        self.screen_cap()
+        sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
+
+        for temp_rel_path in temp_rel_path_list:
+            temp_abs_path = config.get_abs_path(temp_rel_path)
+            temp_gray = cv2.imread(temp_abs_path, cv2.COLOR_BGR2BGRA)
+
+            res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
+            _, max_val, _, max_loc = cv2.minMaxLoc(res)
+            if max_val < threshold:
+                continue
+
+            h, w, _ = cv2.imread(temp_abs_path).shape
+            x = max_loc[0] + w / 2
+            y = max_loc[1] + h / 2
+            return Location(self, temp_abs_path, x, y)
+        return None
+
     def check(self, temp_rel_path):
         loc = self.get_location(temp_rel_path)
         return loc is not None

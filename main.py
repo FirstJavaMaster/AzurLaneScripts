@@ -52,12 +52,8 @@ def provoke_enemy():
     image_name_list = os.listdir(image_dir)
 
     while True:
-        enemy_loc = None
-        for image_name in image_name_list:
-            image_rel_path = image_dir + '/' + image_name
-            enemy_loc = auto_adb.get_location(image_rel_path)
-            if enemy_loc is not None:
-                break
+        image_rel_path_list = map(lambda image_name: image_dir + '/' + image_name, image_name_list)
+        enemy_loc = auto_adb.get_location2(*image_rel_path_list)
         if enemy_loc is None:
             check = auto_adb.check('temp_images/round/in-unit.png')
             if check:
