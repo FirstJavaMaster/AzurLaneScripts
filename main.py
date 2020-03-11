@@ -125,16 +125,12 @@ def go_to_main_page():
 
     try_count = 0
     while True:
+        try_count += 1
         check = auto_adb.check('temp_images/main-fight.png')
         if check:
             return True
-
         res = auto_adb.click('temp_images/home-page.png')
-        if res:
-            print('回到首页')
-            return True
-        else:
-            try_count += 1
+        if not res:
             print('\r未找到首页按钮, 请手动调整 %s' % ('。' * (try_count % 4)), end='')
 
 
