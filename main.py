@@ -37,9 +37,10 @@ def go_unit():
         fight_finish_loc.click()
         auto_adb.wait('temp_images/fight/fight-finish-1.png').click()
         auto_adb.wait('temp_images/fight/fight-finish-2.png',
-                      episode=lambda: auto_adb.click('temp_images/fight/new-ship.png')).click(3)
-        # 可能出现紧急任务
-        auto_adb.wait('temp_images/fight/urgent-task.png', max_wait_time=2).click()
+                      episode=lambda: auto_adb.click('temp_images/fight/new-ship.png')).click()
+        # 可能出现紧急任务提示
+        # 由于是透明遮罩, 所以无法根据其他元素是否显示而做出反应, 只能等一定的时间
+        auto_adb.wait('temp_images/fight/urgent-task.png', max_wait_time=3).click()
 
 
 # 招惹敌军.
