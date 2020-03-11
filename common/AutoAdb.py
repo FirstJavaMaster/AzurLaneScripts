@@ -121,7 +121,7 @@ class AutoAdb:
                 print(' ×', flush=True)
                 return Location(self, None, None, None)
 
-            print('\r > wait %s ... %ds' % (temp_rel_path, duration), end='')
+            print('\r > wait %s ... %ds ' % (temp_rel_path, duration), end='')
             if episode is not None:
                 try:
                     episode()
