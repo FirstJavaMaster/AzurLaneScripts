@@ -25,7 +25,7 @@ class Location:
             return False
 
         self.auto_adb.run('shell input tap %s %s' % (self.pos_x, self.pos_y))
-        print('click [ %d : %d ] %s' % (self.pos_x, self.pos_y, self.temp_rel_path))
+        print('click [%d : %d] %s' % (self.pos_x, self.pos_y, self.temp_rel_path))
         time.sleep(wait_time)
         return True
 
