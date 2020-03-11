@@ -117,8 +117,8 @@ class AutoAdb:
         start_time = datetime.now()
         while True:
             duration = (datetime.now() - start_time).seconds
-            if max_wait_time is not None and duration > max_wait_time:
-                print(' ×')
+            if max_wait_time is not None and 0 < max_wait_time < duration:
+                print(' ×', flush=True)
                 return Location(self, None, None, None)
 
             print('\r > wait %s ... %ds' % (temp_rel_path, duration), end='')
@@ -131,7 +131,7 @@ class AutoAdb:
 
             loc = self.get_location(temp_rel_path, threshold)
             if loc is not None:
-                print(' √')
+                print(' √', flush=True)
                 return loc
 
 
