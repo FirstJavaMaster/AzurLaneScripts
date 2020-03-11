@@ -122,6 +122,8 @@ def check_port_full():
 # 回到主页
 def go_to_main_page():
     auto_adb = AutoAdb()
+
+    try_count = 0
     while True:
         check = auto_adb.check('temp_images/main-fight.png')
         if check:
@@ -132,7 +134,8 @@ def go_to_main_page():
             print('回到首页')
             return True
         else:
-            print('未找到首页按钮, 请手动调整 ...')
+            try_count += 1
+            print('\r未找到首页按钮, 请手动调整 %s' % ('。' * (try_count % 4)), end='')
 
 
 if __name__ == '__main__':
