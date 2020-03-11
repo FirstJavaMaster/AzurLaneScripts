@@ -50,7 +50,7 @@ def go_unit():
 # 异常退出 说明关卡未结束, 可是无法分辨出敌人
 def provoke_enemy():
     # 这里要多等待一秒, 因为经常会有个动画影响寻敌
-    time.sleep(1.5)
+    time.sleep(2)
 
     auto_adb = AutoAdb()
     image_dir = 'temp_images/enemy'
@@ -135,7 +135,7 @@ def go_to_main_page():
             return True
         res = auto_adb.click('temp_images/home-page.png')
         if not res:
-            print('\r未找到首页按钮, 请手动调整 %s' % ('。' * (try_count % 4)), end='')
+            print('\r未找到首页按钮, 请手动调整 %s ' % ('。' * (try_count % 4)), end='')
 
 
 if __name__ == '__main__':
