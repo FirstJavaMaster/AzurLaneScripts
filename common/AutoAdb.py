@@ -95,14 +95,14 @@ class AutoAdb:
         return loc.click()
 
     def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None, episode=None):
-        print('wait %s ' % temp_rel_path, end='')
         start_time = datetime.now()
         while True:
-            if max_wait_time is not None and (datetime.now() - start_time).seconds > max_wait_time:
+            duration = (datetime.now() - start_time).seconds
+            if max_wait_time is not None and duration > max_wait_time:
                 print(' ×')
                 return Location(self, None, None, None)
 
-            print('...', end='')
+            print('\r > wait %s ... %ds' % (temp_rel_path, duration), end='')
             if episode is not None:
                 try:
                     episode()
