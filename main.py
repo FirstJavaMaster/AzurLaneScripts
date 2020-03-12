@@ -6,22 +6,27 @@ from common.AutoAdb import AutoAdb
 
 
 def run():
+    auto_adb = AutoAdb()
+
+    # 如果已经在某个关卡中了, 那就先战斗
+    res = auto_adb.check('temp_images/round/in-round.png')
+    if res:
+        fight_in_unit()
+
     # 首先到主界面
     go_to_main_page()
-
-    auto_adb = AutoAdb()
     # 主界面出击
     auto_adb.wait('temp_images/main-fight.png').click()
     # 关卡出击
     while True:
-        go_unit()
+        # 选择关卡
+        pick_round()
+        # 开始战斗
+        fight_in_unit()
 
 
-def go_unit():
+def fight_in_unit():
     auto_adb = AutoAdb()
-    # 选择关卡
-    pick_round()
-
     while True:
         # 寻找敌人
         res = provoke_enemy()
