@@ -39,7 +39,7 @@ def init_config():
     }
 
     with open(cache_dir + '/runtime.json', 'w') as json_file:
-        json.dump(data, json_file)
+        json.dump(data, json_file, indent=2)
 
 
 def get(key):
