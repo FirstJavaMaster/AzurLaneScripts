@@ -65,6 +65,8 @@ def provoke_enemy(times=1):
     image_name_list = os.listdir(image_dir)
     image_rel_path_list = [*map(lambda image_name: image_dir + '/' + image_name, image_name_list)]
 
+    # swipe_position
+    swp_pos = [1140, 460, 240, 460]
     while True:
         enemy_loc = auto_adb.get_location2(*image_rel_path_list)
         if enemy_loc is None:
@@ -73,8 +75,10 @@ def provoke_enemy(times=1):
                 print('关卡已经结束')
                 return False
             else:
-                print('关卡未结束但找不到敌人')
-                exit(1)
+                print('左右滑动页面')
+                auto_adb.swipe(*swp_pos)
+                swp_pos[0], swp_pos[1], swp_pos[2], swp_pos[3] = swp_pos[2], swp_pos[3], swp_pos[0], swp_pos[1]
+                continue
 
         enemy_loc.click()
         # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环

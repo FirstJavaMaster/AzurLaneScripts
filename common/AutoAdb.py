@@ -113,6 +113,9 @@ class AutoAdb:
             return False
         return loc.click()
 
+    def swipe(self, start_x, start_y, end_x, end_y, duration=0.5):
+        self.run('shell input swipe %d %d %d %d %d' % (start_x, start_y, end_x, end_y, duration))
+
     def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None, episode=None):
         start_time = datetime.now()
         while True:
