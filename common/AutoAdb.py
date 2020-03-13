@@ -67,24 +67,7 @@ class AutoAdb:
     def screen_cap(self):
         self.run('exec-out screencap -p > ' + self.screen_pic_path)
 
-    def get_location(self, temp_rel_path, threshold=threshold):
-        temp_abs_path = config.get_abs_path(temp_rel_path)
-        self.screen_cap()
-
-        sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
-        temp_gray = cv2.imread(temp_abs_path, cv2.COLOR_BGR2BGRA)
-
-        res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
-        _, max_val, _, max_loc = cv2.minMaxLoc(res)
-        if max_val < threshold:
-            return None
-
-        h, w, _ = cv2.imread(temp_abs_path).shape
-        x = max_loc[0] + w / 2
-        y = max_loc[1] + h / 2
-        return Location(self, temp_rel_path, x, y)
-
-    def get_location2(self, *temp_rel_path_list, threshold=threshold):
+    def get_location(self, *temp_rel_path_list, threshold=threshold):
         self.screen_cap()
         sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
 
@@ -108,12 +91,12 @@ class AutoAdb:
         return loc is not None
 
     def click(self, temp_rel_path, threshold=threshold):
-        loc = self.get_location(temp_rel_path, threshold)
+        loc = self.get_location(temp_rel_path, threshold=threshold)
         if loc is None:
             return False
         return loc.click()
 
-    def swipe(self, start_x, start_y, end_x, end_y, duration=0.5):
+    def swipe(self, start_x, start_y, end_x, end_y, duration=1000):
         self.run('shell input swipe %d %d %d %d %d' % (start_x, start_y, end_x, end_y, duration))
 
     def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None, episode=None):
@@ -132,7 +115,7 @@ class AutoAdb:
                     print('过程方法执行异常')
                     print(e)
 
-            loc = self.get_location(temp_rel_path, threshold)
+            loc = self.get_location(temp_rel_path, threshold=threshold)
             if loc is not None:
                 print(' √', flush=True)
                 return loc
