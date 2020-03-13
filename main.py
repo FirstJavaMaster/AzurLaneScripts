@@ -54,8 +54,8 @@ def fight_in_unit():
 # False 说明关卡结束, 未找到
 # 异常退出 说明关卡未结束, 可是无法分辨出敌人
 def provoke_enemy():
-    # 这里要多等待一秒, 因为经常会有个动画影响寻敌
-    time.sleep(2)
+    # 这里要多等待几秒, 因为经常会有个动画影响寻敌
+    time.sleep(3)
 
     auto_adb = AutoAdb()
     image_dir = 'temp_images/enemy'
