@@ -27,15 +27,13 @@ def run():
 
 def fight_in_unit():
     auto_adb = AutoAdb()
+    provoke_enemy_times = 0  # 寻敌次数
     while True:
         # 寻找敌人
-        res = provoke_enemy()
+        provoke_enemy_times += 1
+        res = provoke_enemy(provoke_enemy_times)
         if not res:
             break
-
-        # 找到敌人后开始出击
-        auto_adb.wait('temp_images/fight/fight.png').click()
-        check_port_full()
 
         print('战斗开始 >>>')
         fight_finish_loc = auto_adb.wait('temp_images/fight/fight-finish.png')
@@ -51,13 +49,18 @@ def fight_in_unit():
 
 # 招惹敌军.
 # True 说明已经找到
-# False 说明关卡结束, 未找到
+# False 说明关卡结束
 # 异常退出 说明关卡未结束, 可是无法分辨出敌人
-def provoke_enemy():
+def provoke_enemy(times=1):
     # 这里要多等待几秒, 因为经常会有个动画影响寻敌
     time.sleep(3)
 
     auto_adb = AutoAdb()
+
+    # 2次之后切换到第二舰队
+    if times >= 3:
+        auto_adb.wait('temp_images/round/switch-over.png').click(2)
+
     image_dir = 'temp_images/enemy'
     image_name_list = os.listdir(image_dir)
     image_rel_path_list = [*map(lambda image_name: image_dir + '/' + image_name, image_name_list)]
@@ -75,9 +78,10 @@ def provoke_enemy():
 
         enemy_loc.click()
         # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
-        is_valuable = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=5,
-                                    episode=deal_accident_when_provoke_enemy).is_valuable()
-        if is_valuable:
+        res = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=6,
+                            episode=deal_accident_when_provoke_enemy).click()
+        if res:
+            check_port_full()
             return True
         else:
             # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
