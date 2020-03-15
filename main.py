@@ -1,7 +1,8 @@
-import os
 import time
+from datetime import datetime
 
 import config
+from common import TempUtils, Swiper
 from common.AutoAdb import AutoAdb
 
 
@@ -13,10 +14,6 @@ def run():
     if res:
         fight_in_unit()
 
-    # 首先到主界面
-    go_to_main_page()
-    # 主界面出击
-    auto_adb.wait('temp_images/main-fight.png').click()
     # 关卡出击
     while True:
         # 选择关卡
@@ -27,17 +24,16 @@ def run():
 
 def fight_in_unit():
     auto_adb = AutoAdb()
-    provoke_enemy_times = 0  # 寻敌次数
     while True:
         # 寻找敌人
-        provoke_enemy_times += 1
-        res = provoke_enemy(provoke_enemy_times)
+        res = provoke_enemy()
         if not res:
             break
 
         print('战斗开始 >>>')
         fight_finish_loc = auto_adb.wait('temp_images/fight/fight-finish.png')
         print(' 战斗结束 !')
+        time.sleep(1)  # 临时补丁, 下面这个点击经常失效, 加个等待时间
         fight_finish_loc.click()
         auto_adb.wait('temp_images/fight/fight-finish-1.png').click()
         auto_adb.wait('temp_images/fight/fight-finish-2.png',
@@ -51,7 +47,7 @@ def fight_in_unit():
 # True 说明已经找到
 # False 说明关卡结束
 # 异常退出 说明关卡未结束, 可是无法分辨出敌人
-def provoke_enemy(times=1):
+def provoke_enemy():
     # 这里要多等待几秒, 因为经常会有个动画影响寻敌
     time.sleep(3)
 
@@ -61,27 +57,25 @@ def provoke_enemy(times=1):
         print('关卡已经结束')
         return False
 
-    # 2次之后切换到第二舰队
-    if times >= 3:
+    # 切换到第二舰队
+    if auto_adb.check('temp_images/round/bullet-empty.png'):
         auto_adb.wait('temp_images/round/switch-over.png').click(2)
 
-    image_dir = 'temp_images/enemy'
-    image_name_list = os.listdir(image_dir)
-    image_rel_path_list = [*map(lambda image_name: image_dir + '/' + image_name, image_name_list)]
+    image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
 
     # swipe_position
-    swp_pos = [1140, 460, 240, 460]
+    swipe_times = 0
     while True:
         enemy_loc = auto_adb.get_location(*image_rel_path_list)
         if enemy_loc is None:
-            print('左右滑动页面')
-            auto_adb.swipe(*swp_pos)
-            swp_pos[0], swp_pos[1], swp_pos[2], swp_pos[3] = swp_pos[2], swp_pos[3], swp_pos[0], swp_pos[1]
+            swipe_times += 1
+            print('左右滑动页面 %d' % swipe_times)
+            Swiper.swipe(swipe_times)
             continue
 
         enemy_loc.click()
         # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
-        res = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=6,
+        res = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=8,
                             episode=deal_accident_when_provoke_enemy).click()
         if res:
             check_port_full()
@@ -117,7 +111,17 @@ def pick_round():
         return
 
     # 确定进入
-    auto_adb.wait('temp_images/round/target-round.png').click()
+    target_stage_list = TempUtils.get_temp_rel_path_list('temp_images/target-stage')
+    start_time = datetime.now()
+    while True:
+        duration = (datetime.now() - start_time).seconds
+        print('\r扫描目标关卡中 ... %ds' % duration, end='')
+        loc = auto_adb.get_location(*target_stage_list)
+        if loc is not None:
+            break
+
+    print('%s √' % loc.temp_rel_path)
+    loc.click()
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
     auto_adb.wait('temp_images/round/into-confirm.png').click()
     auto_adb.wait('temp_images/round/into-confirm.png', episode=check_port_full).click()
@@ -133,21 +137,6 @@ def check_port_full():
     if port_full:
         print('船坞已经满员了, 请整理')
         exit(1)
-
-
-# 回到主页
-def go_to_main_page():
-    auto_adb = AutoAdb()
-
-    try_count = 0
-    while True:
-        try_count += 1
-        check = auto_adb.check('temp_images/main-fight.png')
-        if check:
-            return True
-        res = auto_adb.click('temp_images/home-page.png')
-        if not res:
-            print('\r未找到首页按钮, 请手动调整 %s ' % ('。' * (try_count % 4)), end='')
 
 
 if __name__ == '__main__':
