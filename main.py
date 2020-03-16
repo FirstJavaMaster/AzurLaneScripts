@@ -4,25 +4,26 @@ from datetime import datetime
 import config
 from common import TempUtils, Swiper
 from common.AutoAdb import AutoAdb
+from common.Location import Location
 
 
 def run():
     auto_adb = AutoAdb()
 
     # 如果已经在某个关卡中了, 那就先战斗
-    res = auto_adb.check('temp_images/stage/in-round.png')
+    res = auto_adb.check('temp_images/stage/in-stage.png')
     if res:
-        fight_in_unit()
+        fight_in_stage()
 
     # 关卡出击
     while True:
         # 选择关卡
         pick_stage()
         # 开始战斗
-        fight_in_unit()
+        fight_in_stage()
 
 
-def fight_in_unit():
+def fight_in_stage():
     auto_adb = AutoAdb()
     while True:
         # 寻找敌人
@@ -33,11 +34,18 @@ def fight_in_unit():
         print('战斗开始 >>>')
         fight_finish_loc = auto_adb.wait('temp_images/fight/fight-finish.png')
         print(' 战斗结束 !')
-        time.sleep(1)  # 临时补丁, 下面这个点击经常失效, 加个等待时间 1088 664
-        fight_finish_loc.click()
-        auto_adb.wait('temp_images/fight/fight-finish-1.png').click()
-        auto_adb.wait('temp_images/fight/fight-finish-2.png',
-                      episode=lambda: auto_adb.click('temp_images/fight/new-ship.png')).click()
+        ending_loc = Location(auto_adb, None, 1080, 660)
+        while True:
+            in_stage = auto_adb.check('temp_images/stage/in-stage.png')
+            in_unit = auto_adb.check('temp_images/stage/in-unit.png')
+            if in_stage or in_unit:
+                break
+
+            new_ship = auto_adb.check('temp_images/fight/new-ship.png')
+            if new_ship:
+                input('发现新船!! 按下任何按键以继续 ...')
+            ending_loc.click()
+
         # 可能出现紧急任务提示
         # 由于是透明遮罩, 所以无法根据其他元素是否显示而做出反应, 只能等一定的时间
         auto_adb.wait('temp_images/fight/urgent-task.png', max_wait_time=3).click()
@@ -112,7 +120,7 @@ def pick_stage():
 
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
-    res = auto_adb.wait('temp_images/stage/in-round.png', max_wait_time=2).is_valuable()
+    res = auto_adb.wait('temp_images/stage/in-stage.png', max_wait_time=2).is_valuable()
     if res:
         return
 
@@ -133,7 +141,7 @@ def pick_stage():
     auto_adb.wait('temp_images/stage/into-confirm.png', episode=check_port_full).click()
 
     # 确保已经进入关卡
-    auto_adb.wait('temp_images/stage/in-round.png')
+    auto_adb.wait('temp_images/stage/in-stage.png')
 
 
 # 判断船坞是否满员

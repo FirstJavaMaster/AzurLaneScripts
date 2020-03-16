@@ -18,7 +18,7 @@ class Location:
         self.pos_y = pos_y
 
     def is_valuable(self):
-        return self.pos_x is not None
+        return self.pos_x is not None and self.pos_y is not None
 
     def click(self, wait_time=wait_time):
         if self.pos_x is None:
