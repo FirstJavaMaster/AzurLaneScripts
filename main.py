@@ -63,7 +63,6 @@ def provoke_enemy():
 
     image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
 
-    # swipe_position
     swipe_times = 0
     while True:
         enemy_loc = auto_adb.get_location(*image_rel_path_list)
