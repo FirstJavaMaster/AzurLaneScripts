@@ -44,6 +44,7 @@ def fight_in_stage():
             new_ship = auto_adb.check('temp_images/fight/new-ship.png')
             if new_ship:
                 input('发现新船!! 按下任何按键以继续 ...')
+                continue
             ending_loc.click()
 
         # 可能出现紧急任务提示
@@ -73,10 +74,11 @@ def provoke_enemy():
 
     swipe_times = 0
     while True:
+        print('寻找敌人 ... ')
         enemy_loc = auto_adb.get_location(*image_rel_path_list)
         if enemy_loc is None:
             swipe_times += 1
-            print('左右滑动页面 %d' % swipe_times)
+            print('未找到敌人, 尝试滑动页面 %d' % swipe_times)
             Swiper.swipe(swipe_times)
             continue
 
