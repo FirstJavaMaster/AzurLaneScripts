@@ -33,7 +33,7 @@ def fight_in_unit():
         print('战斗开始 >>>')
         fight_finish_loc = auto_adb.wait('temp_images/fight/fight-finish.png')
         print(' 战斗结束 !')
-        time.sleep(1)  # 临时补丁, 下面这个点击经常失效, 加个等待时间
+        time.sleep(1)  # 临时补丁, 下面这个点击经常失效, 加个等待时间 1088 664
         fight_finish_loc.click()
         auto_adb.wait('temp_images/fight/fight-finish-1.png').click()
         auto_adb.wait('temp_images/fight/fight-finish-2.png',
@@ -70,6 +70,13 @@ def provoke_enemy():
             swipe_times += 1
             print('左右滑动页面 %d' % swipe_times)
             Swiper.swipe(swipe_times)
+            continue
+
+        # 如果找到的是boss, 且当前是第一队, 则放弃此敌人, 重新寻找敌人
+        is_boss = enemy_loc.temp_rel_path == 'temp_images/enemy/z-boss.png'
+        is_first_team = auto_adb.check('temp_images/stage/team-1.png')
+        if is_boss and is_first_team:
+            image_rel_path_list.remove(enemy_loc.temp_rel_path)
             continue
 
         enemy_loc.click()
