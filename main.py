@@ -10,14 +10,14 @@ def run():
     auto_adb = AutoAdb()
 
     # 如果已经在某个关卡中了, 那就先战斗
-    res = auto_adb.check('temp_images/round/in-round.png')
+    res = auto_adb.check('temp_images/stage/in-round.png')
     if res:
         fight_in_unit()
 
     # 关卡出击
     while True:
         # 选择关卡
-        pick_round()
+        pick_stage()
         # 开始战斗
         fight_in_unit()
 
@@ -52,14 +52,14 @@ def provoke_enemy():
     time.sleep(3)
 
     auto_adb = AutoAdb()
-    check = auto_adb.check('temp_images/round/in-unit.png')
+    check = auto_adb.check('temp_images/stage/in-unit.png')
     if check:
         print('关卡已经结束')
         return False
 
     # 切换到第二舰队
-    if auto_adb.check('temp_images/round/bullet-empty.png'):
-        auto_adb.wait('temp_images/round/switch-over.png').click(2)
+    if auto_adb.check('temp_images/stage/bullet-empty.png'):
+        auto_adb.wait('temp_images/stage/switch-over.png').click(2)
 
     image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
 
@@ -93,19 +93,19 @@ def deal_accident_when_provoke_enemy():
         print('确认自律战斗')
         auto_adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
     # 处理途中获得道具的提示
-    auto_adb.click('temp_images/round/get-tool.png')
+    auto_adb.click('temp_images/stage/get-tool.png')
     # 处理伏击
-    auto_adb.click('temp_images/round/escape.png')
+    auto_adb.click('temp_images/stage/escape.png')
 
 
 # 选择关卡
-def pick_round():
+def pick_stage():
     # 判断港口是否满员
     check_port_full()
 
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
-    res = auto_adb.wait('temp_images/round/in-round.png', max_wait_time=2).is_valuable()
+    res = auto_adb.wait('temp_images/stage/in-round.png', max_wait_time=2).is_valuable()
     if res:
         return
 
@@ -122,11 +122,11 @@ def pick_round():
     print('%s √' % loc.temp_rel_path)
     loc.click()
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
-    auto_adb.wait('temp_images/round/into-confirm.png').click()
-    auto_adb.wait('temp_images/round/into-confirm.png', episode=check_port_full).click()
+    auto_adb.wait('temp_images/stage/into-confirm.png').click()
+    auto_adb.wait('temp_images/stage/into-confirm.png', episode=check_port_full).click()
 
     # 确保已经进入关卡
-    auto_adb.wait('temp_images/round/in-round.png')
+    auto_adb.wait('temp_images/stage/in-round.png')
 
 
 # 判断船坞是否满员
