@@ -100,6 +100,8 @@ def provoke_enemy():
         res = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=8,
                             episode=deal_accident_when_provoke_enemy).click()
         if res:
+            # 是否出现满员提示
+            check_port_full()
             return True
         else:
             # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
@@ -118,8 +120,6 @@ def deal_accident_when_provoke_enemy():
     auto_adb.click('temp_images/stage/get-tool.png')
     # 处理伏击
     auto_adb.click('temp_images/stage/escape.png')
-    # 是否出现满员提示
-    check_port_full()
 
 
 # 选择关卡
