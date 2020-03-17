@@ -45,6 +45,12 @@ def fight_in_stage():
             if new_ship:
                 input('发现新船!! 按下任何按键以继续 ...')
                 continue
+
+            fail_confirm = auto_adb.click('temp_images/fight/fail-confirm.png')
+            if fail_confirm:
+                input('战斗失败!! 请整理后按下任何按键以继续 ...')
+                continue
+
             ending_loc.click()
 
         # 可能出现紧急任务提示
