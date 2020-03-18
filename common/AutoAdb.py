@@ -15,8 +15,7 @@ class AutoAdb:
     screen_pic_path = config.get_cache_dir() + '/screen.png'
 
     def __init__(self, test_device=False):
-        # 如果没有配置的话则从系统环境变量中获取
-        self.adb_path = config.adb_path if config.adb_path else 'adb'
+        self.adb_path = config.get_work_dir() + '/adb/adb.exe'
         if test_device:
             self.test_device()
 
@@ -31,8 +30,7 @@ class AutoAdb:
         try:
             subprocess.Popen([self.adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError:
-            print('请配置ADB路径或将其配置到环境变量中')
-            print('可参考下文中的相关说明: https://github.com/wangshub/wechat_jump_game/wiki')
+            print('ADB 配置有误')
             exit(1)
 
         print('检查设备 ...')
@@ -41,13 +39,16 @@ class AutoAdb:
         output = process.communicate()
         lines = output[0].decode('utf8').splitlines()
 
-        number = 0
-        for each in lines:
-            if each:
-                print(each)
-                number += 1
-        if number != 2:
-            print('找到 %s 个设备, 无法处理. 请保证只有一个设备存在' % (number - 1))
+        device_number = -1  # -1 是为了去除"标题行"
+        for line in lines:
+            if line:
+                print(line)
+                device_number += 1
+        if device_number < 1:
+            print('未连接到设备, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
+            exit(1)
+        if device_number > 2:
+            print('设备数量过多, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
             exit(1)
         print('设备已连接', end='\n\n')
 

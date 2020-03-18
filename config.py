@@ -1,13 +1,6 @@
 import json
 import os
 
-# 用户自定义配置区域
-adb_path = r'D:\AndroidSDK\platform-tools\adb.exe'
-
-
-###
-
-###
 
 # 方法区
 
