@@ -32,7 +32,7 @@ def fight_in_stage():
             break
 
         print('战斗开始 >>>')
-        auto_adb.wait('temp_images/fight/fight-finish.png')
+        auto_adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
         print(' 战斗结束 !')
         ending_loc = Location(auto_adb, None, 1040, 660)
         while True:
