@@ -1,9 +1,9 @@
 from common.AutoAdb import AutoAdb
 
-pos_1 = [330, 230]
-pos_2 = [950, 230]
-pos_3 = [950, 500]
-pos_4 = [330, 500]
+pos_1 = [200, 200]
+pos_2 = [1100, 200]
+pos_3 = [1100, 600]
+pos_4 = [200, 600]
 
 
 def swipe(num):
