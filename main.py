@@ -43,7 +43,9 @@ def fight_in_stage():
 
             new_ship = auto_adb.check('temp_images/fight/new-ship.png')
             if new_ship:
-                input('发现新船!! 按下任何按键以继续 ...')
+                print('发现新船!!')
+                ending_loc.click()
+                auto_adb.click('temp_images/fight/new-ship-confirm.png')
                 continue
 
             fail_confirm = auto_adb.click('temp_images/fight/fail-confirm.png')
