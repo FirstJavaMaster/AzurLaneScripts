@@ -30,6 +30,3 @@ class Location:
         return True
 
 
-if __name__ == '__main__':
-    print('执行 main.py 启动脚本')
-    exit(1)

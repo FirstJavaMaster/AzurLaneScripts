@@ -1,26 +1,9 @@
 import time
 from datetime import datetime
 
-import config
 from common import TempUtils, Swiper
 from common.AutoAdb import AutoAdb
 from common.Location import Location
-
-
-def run():
-    auto_adb = AutoAdb()
-
-    # 如果已经在某个关卡中了, 那就先战斗
-    res = auto_adb.check('temp_images/stage/in-stage.png')
-    if res:
-        fight_in_stage()
-
-    # 关卡出击
-    while True:
-        # 选择关卡
-        pick_stage()
-        # 开始战斗
-        fight_in_stage()
 
 
 def fight_in_stage():
@@ -150,6 +133,8 @@ def pick_stage():
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
     auto_adb.wait('temp_images/stage/into-confirm.png').click()
     auto_adb.wait('temp_images/stage/into-confirm.png', episode=check_port_full).click()
+    # 特殊关卡会提示更多
+    auto_adb.wait('temp_images/fight/fight-confirm.png', max_wait_time=3).click()
 
     # 确保已经进入关卡
     auto_adb.wait('temp_images/stage/in-stage.png')
@@ -165,7 +150,5 @@ def check_port_full():
 
 
 if __name__ == '__main__':
-    # 保证配置优先初始化
-    config.init_config()
-    AutoAdb(test_device=True)
-    run()
+    print('非合法启动')
+    exit(1)

@@ -124,8 +124,3 @@ class AutoAdb:
 
             if cycle_interval > 0:
                 time.sleep(cycle_interval)
-
-
-if __name__ == '__main__':
-    print('执行 main.py 启动脚本')
-    exit(1)
