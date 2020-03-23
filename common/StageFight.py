@@ -57,7 +57,7 @@ def provoke_enemy():
         print('关卡已经结束')
         return False
 
-    # 切换到第二舰队
+    # 弹药为空时切换到第二舰队
     if auto_adb.check('temp_images/stage/bullet-empty.png'):
         auto_adb.wait('temp_images/stage/switch-over.png').click(2)
 
@@ -73,11 +73,11 @@ def provoke_enemy():
             Swiper.swipe(swipe_times)
             continue
 
-        # 如果找到的是boss, 且当前是第一队, 则放弃此敌人, 重新寻找敌人
-        is_boss = enemy_loc.temp_rel_path == 'temp_images/enemy/z-boss.png'
+        # 如果找到的是boss, 且当前是第一队, 则切换到第二队开始寻找敌人
+        is_boss = 'boss' in enemy_loc.temp_rel_path
         is_first_team = auto_adb.check('temp_images/stage/team-1.png')
         if is_boss and is_first_team:
-            image_rel_path_list.remove(enemy_loc.temp_rel_path)
+            auto_adb.wait('temp_images/stage/switch-over.png').click(2)
             continue
 
         enemy_loc.click()
