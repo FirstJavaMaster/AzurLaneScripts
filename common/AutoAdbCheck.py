@@ -18,7 +18,7 @@ def test_device(auto_adb):
 
 
 def check_link(auto_adb):
-    print('检查设备 ...')
+    print('检测设备 ...')
     device_number = check_link_number(auto_adb)
     if device_number < 1:
         adb_host_port = ConfigUtils.get('adb_host_port')
@@ -27,7 +27,7 @@ def check_link(auto_adb):
             device_number = check_link_number(auto_adb)
 
     if device_number < 1:
-        print('未连接到设备, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
+        print('未检测到设备, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
         exit(1)
     if device_number > 2:
         print('设备数量过多, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
