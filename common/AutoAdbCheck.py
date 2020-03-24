@@ -14,7 +14,7 @@ def test_device(auto_adb):
     check_link(auto_adb)
     check_size(auto_adb)
     check_other(auto_adb)
-    print('\n\n')
+    print('\n')
 
 
 def check_link(auto_adb):
