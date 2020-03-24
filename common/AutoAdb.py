@@ -6,17 +6,17 @@ from datetime import datetime
 
 import cv2
 
-import config
+from common import PathUtils
 from common.Location import Location
 
 
 class AutoAdb:
     threshold = 0.8
     wait_time = 1
-    screen_pic_path = config.get_cache_dir() + '/screen.png'
+    screen_pic_path = PathUtils.get_cache_dir() + '/screen.png'
 
     def __init__(self, test_device=False):
-        self.adb_path = config.get_work_dir() + '/adb/adb.exe'
+        self.adb_path = PathUtils.get_work_dir() + '/adb/adb.exe'
         if test_device:
             self.test_device()
 
@@ -74,7 +74,7 @@ class AutoAdb:
         sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
 
         for temp_rel_path in temp_rel_path_list:
-            temp_abs_path = config.get_abs_path(temp_rel_path)
+            temp_abs_path = PathUtils.get_abs_path(temp_rel_path)
             temp_gray = cv2.imread(temp_abs_path, cv2.COLOR_BGR2BGRA)
 
             res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
