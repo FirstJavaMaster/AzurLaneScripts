@@ -27,7 +27,7 @@ class Slider:
         self.auto_adb.swipe(*pos_start, *pos_end)
 
         # 每四次为一轮。从第二轮开始滑动会添加噪值
-        if self.num < 4:
-            return
         if 4 <= self.num < 8 or (self.num >= 8 and random.randint(0, 1) == 0):
             self.auto_adb.swipe(*pos_start, *pos_end)
+        # +1
+        self.num += 1
