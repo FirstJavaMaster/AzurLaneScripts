@@ -1,70 +1,28 @@
 # -*- coding: utf-8 -*-
 import os
-import subprocess
 import time
 from datetime import datetime
 
 import cv2
 
-import config
+from common import PathUtils, AutoAdbCheck
 from common.Location import Location
 
 
 class AutoAdb:
     threshold = 0.8
     wait_time = 1
-    screen_pic_path = config.get_cache_dir() + '/screen.png'
+    screen_pic_path = PathUtils.get_cache_dir() + '/screen.png'
 
     def __init__(self, test_device=False):
-        self.adb_path = config.get_work_dir() + '/adb/adb.exe'
+        self.adb_path = PathUtils.get_work_dir() + '/adb/adb.exe'
         if test_device:
-            self.test_device()
+            AutoAdbCheck.test_device(self)
 
     def run(self, raw_command):
-        command = '{} {}'.format(self.adb_path, raw_command)
-        process = os.popen(command)
-        output = process.read().strip()
-        return output
-
-    def test_device(self):
-        print('ADB PATH >>>> ' + self.adb_path, end='\n\n')
-        try:
-            subprocess.Popen([self.adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except OSError:
-            print('ADB 配置有误')
-            exit(1)
-
-        print('检查设备 ...')
-        command_list = [self.adb_path, 'devices']
-        process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = process.communicate()
-        lines = output[0].decode('utf8').splitlines()
-
-        device_number = -1  # -1 是为了去除"标题行"
-        for line in lines:
-            if line:
-                print(line)
-                device_number += 1
-        if device_number < 1:
-            print('未连接到设备, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
-            exit(1)
-        if device_number > 2:
-            print('设备数量过多, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
-            exit(1)
-        print('设备已连接', end='\n\n')
-
-        output = self.run('shell wm size')
-        print('屏幕分辨率: ' + output)
-        if 'Physical size: 1280x720' not in output:
-            print('请将分辨率设置为 1280x720 (横向 平板模式)')
-            exit(1)
-
-        output = self.run('shell wm density')
-        print("像素密度: " + output)
-        output = self.run('shell getprop ro.product.device')
-        print("系统类型: " + output)
-        output = self.run('shell getprop ro.build.version.release')
-        print('系统版本: ' + output)
+        command = '%s %s' % (self.adb_path, raw_command)
+        res = os.popen(command)
+        return res.buffer.read().decode('utf-8').strip()
 
     def screen_cap(self):
         self.run('exec-out screencap -p > ' + self.screen_pic_path)
@@ -74,7 +32,7 @@ class AutoAdb:
         sp_gray = cv2.imread(self.screen_pic_path, cv2.COLOR_BGR2BGRA)
 
         for temp_rel_path in temp_rel_path_list:
-            temp_abs_path = config.get_abs_path(temp_rel_path)
+            temp_abs_path = PathUtils.get_abs_path(temp_rel_path)
             temp_gray = cv2.imread(temp_abs_path, cv2.COLOR_BGR2BGRA)
 
             res = cv2.matchTemplate(sp_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
