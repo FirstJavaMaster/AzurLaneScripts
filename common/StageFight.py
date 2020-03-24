@@ -1,9 +1,10 @@
 import time
 from datetime import datetime
 
-from common import TempUtils, Swiper
+from common import TempUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
+from common.Slider import Slider
 
 
 def fight_in_stage():
@@ -63,14 +64,12 @@ def provoke_enemy():
 
     image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
 
-    swipe_times = 0
+    slider = Slider()
     while True:
         print('寻找敌人 ... ')
         enemy_loc = auto_adb.get_location(*image_rel_path_list)
         if enemy_loc is None:
-            swipe_times += 1
-            print('未找到敌人, 尝试滑动页面 %d' % swipe_times)
-            Swiper.swipe(swipe_times)
+            slider.slider()
             continue
 
         # 如果找到的是boss, 且当前是第一队, 则切换到第二队开始寻找敌人
