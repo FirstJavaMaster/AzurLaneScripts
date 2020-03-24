@@ -14,7 +14,7 @@ def test_device(auto_adb):
     check_link(auto_adb)
     check_size(auto_adb)
     check_other(auto_adb)
-    print('\n')
+    print()
 
 
 def check_link(auto_adb):
@@ -36,10 +36,7 @@ def check_link(auto_adb):
 
 
 def check_link_number(auto_adb):
-    command_list = [auto_adb.adb_path, 'devices']
-    process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = process.communicate()
-    lines = output[0].decode('utf8').splitlines()
+    lines = auto_adb.run('devices').splitlines()
     return len(lines) - 1  # -1 是为了去除"标题行"
 
 

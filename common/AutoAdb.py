@@ -20,10 +20,9 @@ class AutoAdb:
             AutoAdbCheck.test_device(self)
 
     def run(self, raw_command):
-        command = '{} {}'.format(self.adb_path, raw_command)
-        process = os.popen(command)
-        output = process.read().strip()
-        return output
+        command = '%s %s' % (self.adb_path, raw_command)
+        res = os.popen(command)
+        return res.buffer.read().decode('utf-8').strip()
 
     def screen_cap(self):
         self.run('exec-out screencap -p > ' + self.screen_pic_path)
