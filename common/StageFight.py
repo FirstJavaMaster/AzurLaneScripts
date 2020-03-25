@@ -34,7 +34,7 @@ def fight_in_stage():
 
             fail_confirm = auto_adb.click('temp_images/fight/fail-confirm.png')
             if fail_confirm:
-                input('战斗失败!! 请整理后按下任何按键以继续 ...')
+                print('战斗失败！！')
                 continue
 
             ending_loc.click()
