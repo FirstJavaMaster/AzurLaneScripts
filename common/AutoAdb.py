@@ -50,11 +50,11 @@ class AutoAdb:
         loc = self.get_location(temp_rel_path)
         return loc is not None
 
-    def click(self, temp_rel_path, threshold=threshold):
+    def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):
         loc = self.get_location(temp_rel_path, threshold=threshold)
         if loc is None:
             return False
-        return loc.click()
+        return loc.click(wait_time)
 
     def swipe(self, start_x, start_y, end_x, end_y, duration=1000):
         self.run('shell input swipe %d %d %d %d %d' % (start_x, start_y, end_x, end_y, duration))

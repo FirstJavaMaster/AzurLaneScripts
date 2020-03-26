@@ -35,6 +35,8 @@ def fight_in_stage():
             fail_confirm = auto_adb.click('temp_images/fight/fail-confirm.png')
             if fail_confirm:
                 print('战斗失败！！')
+                # 战队难以成型时点击确定
+                auto_adb.wait('temp_images/fight/fail-confirm-2.png', max_wait_time=3).click()
                 continue
 
             ending_loc.click()
