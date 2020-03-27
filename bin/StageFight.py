@@ -71,7 +71,7 @@ def provoke_enemy():
         print('寻找敌人 ... ')
         enemy_loc = auto_adb.get_location(*image_rel_path_list)
         if enemy_loc is None:
-            slider.slider()
+            slider.slide()
             continue
 
         # 如果找到的是boss, 且当前是第一队, 则切换到第二队开始寻找敌人

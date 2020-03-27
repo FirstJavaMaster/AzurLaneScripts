@@ -16,7 +16,7 @@ class Slider:
         [200, 600]  # 左下角
     ]
 
-    def slider(self):
+    def slide(self):
         print('滑动页面。 累积次数: %d.' % self.num)
 
         cursor_start = self.num % 4
@@ -31,3 +31,29 @@ class Slider:
             self.auto_adb.swipe(*pos_start, *pos_end)
         # +1
         self.num += 1
+
+    # 单向滑动
+    # direction 滑动方向，1、2、3、4分别代表上下左右
+    # num 滑动 次数
+    def slide_unidirectional(self, direction, num=1):
+        if num is None or num <= 0:
+            return
+
+        if direction == 1:
+            pos_start = self.pos_list[3]
+            pos_end = self.pos_list[0]
+        elif direction == 2:
+            pos_start = self.pos_list[0]
+            pos_end = self.pos_list[3]
+        elif direction == 3:
+            pos_start = self.pos_list[0]
+            pos_end = self.pos_list[1]
+        else:
+            pos_start = self.pos_list[1]
+            pos_end = self.pos_list[0]
+
+        while True:
+            if num == 0:
+                break
+            self.auto_adb.swipe(*pos_start, *pos_end)
+            num -= 1
