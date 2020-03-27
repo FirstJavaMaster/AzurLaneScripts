@@ -40,17 +40,17 @@ class Slider:
             return
 
         if direction == 1:
-            pos_start = self.pos_list[3]
-            pos_end = self.pos_list[0]
-        elif direction == 2:
             pos_start = self.pos_list[0]
             pos_end = self.pos_list[3]
+        elif direction == 2:
+            pos_start = self.pos_list[3]
+            pos_end = self.pos_list[0]
         elif direction == 3:
-            pos_start = self.pos_list[0]
-            pos_end = self.pos_list[1]
-        else:
             pos_start = self.pos_list[1]
             pos_end = self.pos_list[0]
+        else:
+            pos_start = self.pos_list[0]
+            pos_end = self.pos_list[1]
 
         while True:
             if num == 0:
