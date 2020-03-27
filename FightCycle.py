@@ -1,4 +1,4 @@
-from common import StageFight
+from bin import StageFight
 from common.AutoAdb import AutoAdb
 
 
