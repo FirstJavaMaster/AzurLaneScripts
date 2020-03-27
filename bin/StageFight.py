@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 
-from common import TempUtils
+from common import TempUtils, TeamUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
 from common.Slider import Slider
@@ -60,9 +60,12 @@ def provoke_enemy():
         print('关卡已经结束')
         return False
 
-    # 弹药为空时切换到第二舰队
-    if auto_adb.check('temp_images/stage/bullet-empty.png'):
-        auto_adb.wait('temp_images/stage/switch-over.png').click(2)
+    bullet_empty = auto_adb.check('temp_images/stage/bullet-empty.png')
+    team_num = TeamUtils.get_team_num()
+    # 弹药为空且当前是第一队时切换队伍
+    if bullet_empty and team_num:
+        TeamUtils.switch()
+        team_num = 2
 
     image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
 
@@ -74,11 +77,10 @@ def provoke_enemy():
             slider.slide()
             continue
 
-        # 如果找到的是boss, 且当前是第一队, 则切换到第二队开始寻找敌人
-        is_boss = 'boss' in enemy_loc.temp_rel_path
-        is_first_team = auto_adb.check('temp_images/stage/team-1.png')
-        if is_boss and is_first_team:
-            auto_adb.wait('temp_images/stage/switch-over.png').click(2)
+        # 如果当前是第一队, 且找到的是boss, 则切换到第二队开始寻找敌人
+        if team_num == 1 and 'boss' in enemy_loc.temp_rel_path:
+            TeamUtils.switch()
+            team_num = 2
             continue
 
         enemy_loc.click()
