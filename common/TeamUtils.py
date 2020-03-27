@@ -12,7 +12,7 @@ def get_team_num():
     is_team_1 = adb.check("temp_images/stage/team-1.png")
 
     # 滑动回来
-    Slider().slide_unidirectional(3, 2)
+    Slider().slide_unidirectional(3, 1)
 
     # 判断
     if is_team_1:
