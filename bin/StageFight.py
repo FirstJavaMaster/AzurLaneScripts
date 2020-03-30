@@ -47,9 +47,6 @@ def fight_in_stage():
 
 # 选择关卡
 def pick_stage():
-    # 判断港口是否满员
-    PortUtils.check_port_full()
-
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
     res = auto_adb.wait('temp_images/stage/in-stage.png', max_wait_time=2).is_valuable()
