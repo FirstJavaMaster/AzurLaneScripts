@@ -1,17 +1,16 @@
-import time
 from datetime import datetime
 
-from common import TempUtils, TeamUtils
+from common import TempUtils, PortUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
-from common.Slider import Slider
+from common.TeamLeader import TeamLeader
 
 
 def fight_in_stage():
     auto_adb = AutoAdb()
     while True:
         # 寻找敌人
-        res = provoke_enemy()
+        res = TeamLeader().provoke_enemy()
         if not res:
             break
 
@@ -46,74 +45,10 @@ def fight_in_stage():
         auto_adb.wait('temp_images/fight/urgent-task.png', max_wait_time=3).click()
 
 
-# 招惹敌军.
-# True 说明已经找到
-# False 说明关卡结束
-# 异常退出 说明关卡未结束, 可是无法分辨出敌人
-def provoke_enemy():
-    # 这里要多等待几秒, 因为经常会有个动画影响寻敌
-    time.sleep(3)
-
-    auto_adb = AutoAdb()
-    check = auto_adb.check('temp_images/stage/in-unit.png')
-    if check:
-        print('关卡已经结束')
-        return False
-
-    bullet_empty = auto_adb.check('temp_images/stage/bullet-empty.png')
-    team_num = TeamUtils.get_team_num()
-    # 弹药为空且当前是第一队时切换队伍
-    if bullet_empty and team_num:
-        TeamUtils.switch()
-        team_num = 2
-
-    image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
-
-    slider = Slider()
-    while True:
-        print('寻找敌人 ... ')
-        enemy_loc = auto_adb.get_location(*image_rel_path_list)
-        if enemy_loc is None:
-            slider.slide()
-            continue
-
-        # 如果当前是第一队, 且找到的是boss, 则切换到第二队开始寻找敌人
-        if team_num == 1 and 'boss' in enemy_loc.temp_rel_path:
-            TeamUtils.switch()
-            team_num = 2
-            continue
-
-        enemy_loc.click()
-        # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
-        res = auto_adb.wait('temp_images/fight/fight.png', max_wait_time=8,
-                            episode=deal_accident_when_provoke_enemy).click()
-        if res:
-            # 是否出现满员提示
-            check_port_full()
-            return True
-        else:
-            # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
-            image_rel_path_list.remove(enemy_loc.temp_rel_path)
-
-
-# 处理进击时的意外情况
-def deal_accident_when_provoke_enemy():
-    auto_adb = AutoAdb()
-    # 自动战斗
-    res = auto_adb.click('temp_images/fight/auto-fight-confirm-1.png')
-    if res:
-        print('确认自律战斗')
-        auto_adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
-    # 处理途中获得道具的提示
-    auto_adb.click('temp_images/stage/get-tool.png')
-    # 处理伏击
-    auto_adb.click('temp_images/stage/escape.png')
-
-
 # 选择关卡
 def pick_stage():
     # 判断港口是否满员
-    check_port_full()
+    PortUtils.check_port_full()
 
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
@@ -135,23 +70,9 @@ def pick_stage():
     loc.click()
     # 这里不是重复, 是确实要点两下. 一次确认关卡, 一次确认队伍
     auto_adb.wait('temp_images/stage/into-confirm.png').click()
-    auto_adb.wait('temp_images/stage/into-confirm.png', episode=check_port_full).click()
+    auto_adb.wait('temp_images/stage/into-confirm.png', episode=PortUtils.check_port_full).click()
     # 特殊关卡会提示更多
     auto_adb.wait('temp_images/fight/fight-confirm.png', max_wait_time=3).click()
 
     # 确保已经进入关卡
     auto_adb.wait('temp_images/stage/in-stage.png')
-
-
-# 判断船坞是否满员
-def check_port_full():
-    auto_adb = AutoAdb()
-    port_full = auto_adb.check('temp_images/port-full.png')
-    if port_full:
-        print('船坞已经满员了, 请整理')
-        exit(1)
-
-
-if __name__ == '__main__':
-    print('非合法启动')
-    exit(1)
