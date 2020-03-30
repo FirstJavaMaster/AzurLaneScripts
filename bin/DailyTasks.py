@@ -10,9 +10,11 @@ def pick_meow():
     Location(adb, None, 580, 680).click()
     # 点击指挥喵
     Location(adb, None, 980, 460).click()
-    # 判断有无免费订购。todo 这个判断有问题
-    exit(1)
+    # 判断有无免费订购。
     have_free = adb.click("temp_images/daily-task/meow/free-meow.png")
+    if have_free:
+        # 第二次判断
+        have_free = adb.click("temp_images/daily-task/meow/free-meow-1.png")
     if have_free:
         # 领取免费
         Location(adb, None, 900, 460).click()
@@ -23,27 +25,25 @@ def pick_meow():
         # 关闭领取对话框
         Location(adb, None, 640, 700).click()
 
-        # 点击训练
-        Location(adb, None, 1200, 680).click()
-        # 点击“全部完成”
-        adb.wait("temp_images/daily-task/meow/finish-all.png").click(2)
-        # 将所有完成提示点击掉
-        while True:
-            find_finish_all = adb.check("temp_images/daily-task/meow/finish-all.png")
-            if find_finish_all:
-                break
-            Location(adb, None, 640, 20).click()
+    # 点击训练
+    Location(adb, None, 1200, 680).click()
+    # 点击“全部完成”
+    adb.wait("temp_images/daily-task/meow/finish-all.png").click(2)
+    # 将所有完成提示点击掉
+    while True:
+        find_finish_all = adb.check("temp_images/daily-task/meow/finish-all.png")
+        if find_finish_all:
+            break
+        Location(adb, None, 640, 20).click()
 
-        # 点击“开始训练”
-        Location(adb, None, 970, 560).click()
-        # 点击“一键选择”
-        adb.wait("temp_images/daily-task/meow/pick-all.png").click()
-        # 点击“开始训练”
-        Location(adb, None, 970, 560).click()
-        # 点击确认
-        adb.wait("temp_images/daily-task/meow/birth-start-confirm.png", max_wait_time=3).click()
-        # 回到主页
-        PageUtils.confirm_in_main_page()
+    # 点击“开始训练”
+    Location(adb, None, 970, 560).click()
+    # 点击“一键选择”
+    adb.wait("temp_images/daily-task/meow/pick-all.png").click()
+    # 点击“开始训练”
+    Location(adb, None, 970, 560).click()
+    # 点击确认
+    adb.wait("temp_images/daily-task/meow/birth-start-confirm.png", max_wait_time=3).click()
 
 
 if __name__ == '__main__':
