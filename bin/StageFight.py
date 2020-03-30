@@ -8,9 +8,10 @@ from common.TeamLeader import TeamLeader
 
 def fight_in_stage():
     auto_adb = AutoAdb()
+    team_leader = TeamLeader()
     while True:
         # 寻找敌人
-        res = TeamLeader().provoke_enemy()
+        res = team_leader.provoke_enemy()
         if not res:
             break
 

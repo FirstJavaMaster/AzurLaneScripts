@@ -5,12 +5,11 @@ from common.AutoAdb import AutoAdb
 from common.Slider import Slider
 
 
+# 真正的指挥喵（大雾）
+# 可以判断当前队伍是哪个；可以寻敌；可以切换队伍；
 class TeamLeader:
     adb = AutoAdb()
     current_team_num = 1  # 当前是第几个队伍
-
-    def __init__(self):
-        self.current_team_num = self.get_team_num()
 
     # 判断当前是第几个队伍
     # 此操作会导致地图发生位移！！因此，此方法被调用前的位置信息会失效
@@ -68,7 +67,7 @@ class TeamLeader:
             enemy_loc.click()
             # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
             res = adb.wait('temp_images/fight/fight.png', max_wait_time=8,
-                                episode=self.deal_accident_when_provoke_enemy).click()
+                           episode=self.deal_accident_when_provoke_enemy).click()
             if res:
                 # 是否出现满员提示
                 PortUtils.check_port_full()
