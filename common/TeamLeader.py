@@ -70,7 +70,10 @@ class TeamLeader:
                            episode=self.deal_accident_when_provoke_enemy).click()
             if res:
                 # 是否出现满员提示
-                PortUtils.check_port_full()
+                port_full = PortUtils.check_port_full()
+                if port_full:
+                    # 如果执行了退役操作，则需要再点一次出击
+                    adb.wait('temp_images/fight/fight.png').click()
                 return True
             else:
                 # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
