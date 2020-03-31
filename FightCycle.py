@@ -6,7 +6,7 @@ def run():
     # 计数
     num = 0
     # 最大通关次数
-    max_stage_fight_times = ConfigUtils.get('max_stage_fight_times')
+    max_stage_fight_times = int(ConfigUtils.get('max_stage_fight_times'))
     # 循环战斗
     while True:
         # 选择关卡
