@@ -69,8 +69,8 @@ class TeamLeader:
             res = adb.wait('temp_images/fight/fight.png', max_wait_time=8,
                            episode=self.accident_when_run).click()
             if res:
-                # 第二次确认前可能会提示船坞已满，这里要判断掉
-                adb.wait('temp_images/fight/fight.png', episode=PortUtils.check_port_full).click()
+                # 等到进入战斗后再返回
+                adb.wait('temp_images/fight/in-fighting.png', cycle_interval=2, episode=self.accident_when_confirm)
                 return True
             else:
                 # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
@@ -88,3 +88,9 @@ class TeamLeader:
         adb.click('temp_images/stage/get-tool.png')
         # 处理伏击
         adb.click('temp_images/stage/escape.png')
+
+    # 处理点击确定时的意外情况
+    def accident_when_confirm(self):
+        retired = PortUtils.check_port_full()
+        if retired:  # 如果发生了退役操作，则再次点击确认按钮
+            self.adb.wait('temp_images/fight/fight.png').click()
