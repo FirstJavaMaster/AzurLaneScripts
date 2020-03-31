@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from common import TempUtils, PortUtils
+from common import PortUtils, PathUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
 from common.TeamLeader import TeamLeader
@@ -55,7 +55,7 @@ def pick_stage():
         return
 
     # 确定进入
-    target_stage_list = TempUtils.get_temp_rel_path_list('temp_images/target-stage')
+    target_stage_list = PathUtils.get_temp_rel_path_list('temp_images/target-stage')
     start_time = datetime.now()
     while True:
         duration = (datetime.now() - start_time).seconds

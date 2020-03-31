@@ -19,6 +19,12 @@ def get_abs_path(*rel_paths):
     return os.path.join(get_work_dir(), *rel_paths)
 
 
+# 从指定文件夹获取模板文件列表
+def get_temp_rel_path_list(rel_dir):
+    image_name_list = os.listdir(rel_dir)
+    return [*map(lambda image_name: rel_dir + '/' + image_name, image_name_list)]
+
+
 # 创建文件夹。确保能创建成功
 def mkdir_ensure(dir_target):
     if os.path.isdir(dir_target):

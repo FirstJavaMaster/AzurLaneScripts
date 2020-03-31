@@ -1,6 +1,6 @@
 import time
 
-from common import TempUtils, PortUtils
+from common import PortUtils, PathUtils
 from common.AutoAdb import AutoAdb
 from common.Slider import Slider
 
@@ -49,7 +49,7 @@ class TeamLeader:
         if self.current_team_num == 1 and adb.check('temp_images/stage/bullet-empty.png'):
             self.switch()
 
-        image_rel_path_list = TempUtils.get_temp_rel_path_list('temp_images/enemy')
+        image_rel_path_list = PathUtils.get_temp_rel_path_list('temp_images/enemy')
 
         slider = Slider()
         while True:
