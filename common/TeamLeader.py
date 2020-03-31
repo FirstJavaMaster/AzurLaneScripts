@@ -67,20 +67,17 @@ class TeamLeader:
             enemy_loc.click()
             # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
             res = adb.wait('temp_images/fight/fight.png', max_wait_time=8,
-                           episode=self.deal_accident_when_provoke_enemy).click()
+                           episode=self.accident_when_run).click()
             if res:
-                # 是否出现满员提示
-                port_full = PortUtils.check_port_full()
-                if port_full:
-                    # 如果执行了退役操作，则需要再点一次出击
-                    adb.wait('temp_images/fight/fight.png').click()
+                # 第二次确认前可能会提示船坞已满，这里要判断掉
+                adb.wait('temp_images/fight/fight.png', episode=PortUtils.check_port_full).click()
                 return True
             else:
                 # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
                 image_rel_path_list.remove(enemy_loc.temp_rel_path)
 
-    # 处理进击时的意外情况
-    def deal_accident_when_provoke_enemy(self):
+    # 处理地图移动时的意外情况
+    def accident_when_run(self):
         adb = self.adb
         # 自动战斗
         res = adb.click('temp_images/fight/auto-fight-confirm-1.png')

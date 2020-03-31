@@ -12,7 +12,7 @@ def check_port_full():
     print('船坞已经满员了... ', end='')
     auto_retire = ConfigUtils.get('auto_retire', fallback=False)
     if auto_retire:
-        print('开始自动退役... ', end='')
+        print('开始自动退役... ')
         adb.wait('temp_images/port/port-full-retire.png').click()  # 整理
         adb.wait('temp_images/port/retire.png').click()  # 一键退役
         adb.wait('temp_images/port/retire-confirm.png').click()  # 确定舰娘
