@@ -3,6 +3,7 @@
 ### Example user template
 
 cache/
+config.ini
 
 # IntelliJ project files
 .idea
