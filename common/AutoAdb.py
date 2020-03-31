@@ -5,7 +5,7 @@ from datetime import datetime
 
 import cv2
 
-from common import PathUtils, AutoAdbCheck
+from common import PathUtils, AutoAdbCheck, ConfigUtils
 from common.Location import Location
 
 
@@ -20,7 +20,8 @@ class AutoAdb:
             AutoAdbCheck.test_device(self)
 
     def run(self, raw_command):
-        command = '%s %s' % (self.adb_path, raw_command)
+        adb_host_port = ConfigUtils.get('adb_host_port')
+        command = '%s -s %s %s' % (self.adb_path, adb_host_port, raw_command)
         res = os.popen(command)
         return res.buffer.read().decode('utf-8').strip()
 

@@ -10,16 +10,32 @@ def get_work_dir():
 # 获取项目的缓存路径
 def get_cache_dir():
     cache_dir = get_work_dir() + '/cache'
-    if not os.path.exists(cache_dir):
-        os.makedirs(cache_dir)
-        return cache_dir
-    if not os.path.isdir(cache_dir):
-        os.remove(cache_dir)
-        os.makedirs(cache_dir)
-        return cache_dir
+    mkdir_ensure(cache_dir)
     return cache_dir
 
 
-# 根据相对路径生成绝对路径
+# 根据相对路径获取绝对路径
 def get_abs_path(*rel_paths):
     return os.path.join(get_work_dir(), *rel_paths)
+
+
+# 创建文件夹。确保能创建成功
+def mkdir_ensure(dir_target):
+    if os.path.isdir(dir_target):
+        return False
+
+    if os.path.isfile(dir_target):
+        os.remove(dir_target)
+    os.makedirs(dir_target)
+    return True
+
+
+# 创建文件。确保能创建成功
+def touch_ensure(file_target):
+    if os.path.isfile(file_target):
+        return False
+
+    if os.path.isdir(file_target):
+        os.removedirs(file_target)
+    os.mknod(file_target)
+    return True

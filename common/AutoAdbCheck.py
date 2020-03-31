@@ -4,7 +4,7 @@ from common import ConfigUtils
 
 
 def test_device(auto_adb):
-    print('ADB PATH >>>> ' + auto_adb.adb_path, end='\n\n')
+    print('ADB PATH >>>> ' + auto_adb.adb_path)
     try:
         subprocess.Popen([auto_adb.adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except OSError:
@@ -18,26 +18,38 @@ def test_device(auto_adb):
 
 
 def check_link(auto_adb):
-    print('检测设备 ...')
-    device_number = check_link_number(auto_adb)
-    if device_number < 1:
-        adb_host_port = ConfigUtils.get('adb_host_port')
-        if adb_host_port is not None:
-            auto_adb.run('connect %s' % adb_host_port)
-            device_number = check_link_number(auto_adb)
+    adb_host_port = ConfigUtils.get('adb_host_port')
+    print('检测设备连接状态 >>> %s ...' % adb_host_port)
 
-    if device_number < 1:
-        print('未检测到设备, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
+    auto_adb.run('connect %s' % adb_host_port)
+    device_list = get_devices(auto_adb)
+    if len(device_list) == 0:
+        print('未检测到设备，请检查ADB地址配置，或参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
         exit(1)
-    if device_number > 2:
-        print('设备数量过多, 请参考 https://github.com/FirstJavaMaster/AzurLaneScripts/blob/master/README.md')
+
+    exist = False
+    print()
+    print('设备列表：')
+    for device in device_list:
+        print(device)
+        if adb_host_port == device:
+            exist = True
+    if not exist:
+        print('设备列表中没找到目标连接（%s），请检查配置是否正确')
         exit(1)
+
     print('设备已连接', end='\n\n')
 
 
-def check_link_number(auto_adb):
+# 获取设备列表
+def get_devices(auto_adb):
+    new_lines = []
     lines = auto_adb.run('devices').splitlines()
-    return len(lines) - 1  # -1 是为了去除"标题行"
+
+    del (lines[0])  # 删除第一个标题行
+    for line in lines:
+        new_lines.append(line.split()[0])
+    return new_lines
 
 
 def check_size(auto_adb):
