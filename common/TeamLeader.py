@@ -41,8 +41,7 @@ class TeamLeader:
         time.sleep(3)
 
         check = adb.check('temp_images/stage/in-unit.png')
-        if check:
-            print('关卡已经结束')
+        if check:  # 关卡已经结束
             return False
 
         # 弹药为空且当前是第一队时切换队伍
