@@ -1,25 +1,21 @@
 from common.AutoAdb import AutoAdb
+from common.Location import Location
 
 
 def confirm_in_main_page():
     adb = AutoAdb()
-    # 如果已经在主页则直接返回
-    check = adb.check("temp_images/main-page.png")
-    if check:
-        return True
-
-    # 点击关闭按钮
-    click = adb.click("temp_images/close.png")
-    if click:
-        return True
-    # 点击返回按钮肯定？可以到主页
-    click = adb.click("temp_images/main-page-button-2.png")
-    if click:
-        return True
-    # 点击主页按钮肯定可以到主页
-    click = adb.click("temp_images/main-page-button.png")
-    if click:
-        return True
-
-    # 如果到这里了，那只能是
-    return False
+    temp_list = [
+        'temp_images/close.png',  # 关闭按钮
+        'temp_images/main-page-button-2.png',  # 返回按钮
+        'temp_images/main-page-button.png'  # 主页按钮
+    ]
+    while True:
+        # 如果已经在主页则直接返回
+        if adb.check("temp_images/main-page.png"):
+            return True
+        # 尝试点击返回按钮
+        loc = adb.get_location(temp_list)
+        if loc is None:  # 如果没找到合理的返回按钮，则点击左上角尝试
+            Location(adb, None, 18, 18).click()
+        else:
+            loc.click()

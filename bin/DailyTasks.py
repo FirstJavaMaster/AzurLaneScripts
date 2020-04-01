@@ -44,6 +44,8 @@ def pick_meow():
     Location(adb, None, 970, 560).click()
     # 点击确认
     adb.wait("temp_images/daily-task/meow/birth-start-confirm.png", max_wait_time=3).click()
+    # 回到主页
+    PageUtils.confirm_in_main_page()
 
 
 if __name__ == '__main__':
