@@ -54,12 +54,17 @@ def pick_stage():
     if res:
         return
 
+    # 如果发现现在在困难关卡，且次数为0，则终止
+    if auto_adb.click('temp_images/no-chance-for-hard.png'):
+        print('困难关卡机会已用尽，程序终止')
+        exit()
+
     # 确定进入
     target_stage_list = PathUtils.get_temp_rel_path_list('temp_images/target-stage')
     start_time = datetime.now()
     while True:
         duration = (datetime.now() - start_time).seconds
-        print('\r扫描目标关卡中 ... %ds' % duration, end='')
+        print('\r扫描目标关卡中 ... %ds ' % duration, end='')
         loc = auto_adb.get_location(*target_stage_list)
         if loc is not None:
             break
