@@ -1,5 +1,6 @@
 from bin import StageFight
 from common import ConfigUtils
+from common.AutoAdb import AutoAdb
 
 
 def run():
@@ -22,5 +23,6 @@ def run():
 
 
 if __name__ == '__main__':
+    AutoAdb(test_device=True)
     print('[连发模式] (持续寻找目标关卡)', end='\n\n')
     run()

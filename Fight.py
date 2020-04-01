@@ -3,7 +3,7 @@ from common.AutoAdb import AutoAdb
 
 
 def run():
-    adb = AutoAdb(test_device=True)
+    adb = AutoAdb()
     in_stage = adb.check('temp_images/stage/in-stage.png')
     if in_stage:  # 如果已经在关卡中，则继续战斗
         StageFight.fight_in_stage()
@@ -12,6 +12,7 @@ def run():
 
 
 if __name__ == '__main__':
+    AutoAdb(test_device=True)
     print('[单发模式] (如果已经在某个关卡中，则自动战斗至关卡结束)', end='\n\n')
     res = run()
     if res:
