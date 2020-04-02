@@ -14,7 +14,7 @@ def pick_meow():
     have_free = adb.click("temp_images/daily-task/meow/free-meow.png")
     if have_free:
         # 第二次判断
-        have_free = adb.click("temp_images/daily-task/meow/free-meow-1.png")
+        have_free = adb.check("temp_images/daily-task/meow/free-meow-1.png")
     if have_free:
         # 领取免费
         Location(adb, None, 900, 460).click()
