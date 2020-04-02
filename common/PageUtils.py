@@ -14,7 +14,7 @@ def confirm_in_main_page():
         if adb.check("temp_images/main-page.png"):
             return True
         # 尝试点击返回按钮
-        loc = adb.get_location(temp_list)
+        loc = adb.get_location(*temp_list)
         if loc is None:  # 如果没找到合理的返回按钮，则点击左上角尝试
             Location(adb, None, 18, 18).click()
         else:
