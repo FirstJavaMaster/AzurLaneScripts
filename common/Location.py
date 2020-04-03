@@ -29,4 +29,6 @@ class Location:
         time.sleep(wait_time)
         return True
 
-
+    def __str__(self):
+        attrs = ", ".join("{}={}".format(k, getattr(self, k)) for k in self.__dict__.keys())
+        return "[{}: {}]".format(self.__class__.__name__, attrs)
