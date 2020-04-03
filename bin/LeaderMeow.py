@@ -3,7 +3,7 @@ from common.AutoAdb import AutoAdb
 from common.Location import Location
 
 
-def pick_meow():
+def run():
     adb = AutoAdb()
     PageUtils.confirm_in_main_page()
     # 点击生活区
@@ -49,4 +49,4 @@ def pick_meow():
 
 
 if __name__ == '__main__':
-    pick_meow()
+    run()
