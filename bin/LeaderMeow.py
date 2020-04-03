@@ -3,6 +3,7 @@ from common.AutoAdb import AutoAdb
 from common.Location import Location
 
 
+# 每天领取指挥喵
 def run():
     adb = AutoAdb()
     PageUtils.confirm_in_main_page()
