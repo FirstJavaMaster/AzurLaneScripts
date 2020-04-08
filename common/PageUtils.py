@@ -2,7 +2,7 @@ from common.AutoAdb import AutoAdb
 from common.Location import Location
 
 
-def confirm_in_main_page():
+def to_main_page():
     adb = AutoAdb()
     temp_list = [
         'temp_images/close.png',  # 关闭按钮

@@ -4,7 +4,7 @@ from common.AutoAdb import AutoAdb
 
 # todo 尚未完成
 def run():
-    PageUtils.confirm_in_main_page()
+    PageUtils.to_main_page()
 
     adb = AutoAdb()
     adb.click('temp_images/daily-task/left-notice.png')
