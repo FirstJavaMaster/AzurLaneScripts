@@ -4,6 +4,7 @@ from common.AutoAdb import AutoAdb
 
 
 def run():
+    print('处理求救信号关卡。。。')
     adb = AutoAdb()
     # 如果已经在关卡中，则先战斗
     StageFight.wind_up_stage_fight()

@@ -1,4 +1,4 @@
-from bin import StageFight
+from bin import StageFight, SosSignal
 from common import ConfigUtils, PathUtils
 from common.AutoAdb import AutoAdb
 
@@ -26,4 +26,5 @@ def run():
 if __name__ == '__main__':
     AutoAdb(test_device=True)
     print('[连发模式] 持续寻找目标关卡', end='\n\n')
+    SosSignal.run()
     run()
