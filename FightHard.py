@@ -5,6 +5,8 @@ from common.AutoAdb import AutoAdb
 
 # 困难关卡
 def run():
+    StageFight.wind_up_stage_fight()
+
     adb = AutoAdb(test_device=True)
     temp_list = PathUtils.get_temp_rel_path_list('temp_images/target-stage-hard')
     while True:
