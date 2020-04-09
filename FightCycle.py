@@ -1,5 +1,5 @@
 from bin import StageFight
-from common import ConfigUtils
+from common import ConfigUtils, PathUtils
 from common.AutoAdb import AutoAdb
 
 
@@ -11,7 +11,8 @@ def run():
     # 循环战斗
     while True:
         # 选择关卡
-        StageFight.pick_stage()
+        target_stage_list = PathUtils.get_temp_rel_path_list('temp_images/target-stage')
+        StageFight.pick_stage(target_stage_list)
         # 开始战斗
         StageFight.fight_in_stage()
         # 计数
@@ -24,5 +25,5 @@ def run():
 
 if __name__ == '__main__':
     AutoAdb(test_device=True)
-    print('[连发模式] (持续寻找目标关卡)', end='\n\n')
+    print('[连发模式] 持续寻找目标关卡', end='\n\n')
     run()

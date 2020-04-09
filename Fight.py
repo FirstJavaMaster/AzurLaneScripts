@@ -1,20 +1,10 @@
 from bin import StageFight
 from common.AutoAdb import AutoAdb
 
-
-def run():
-    adb = AutoAdb()
-    in_stage = adb.check('temp_images/stage/in-stage.png')
-    if in_stage:  # 如果已经在关卡中，则继续战斗
-        StageFight.fight_in_stage()
-        return True
-    return False
-
-
 if __name__ == '__main__':
     AutoAdb(test_device=True)
-    print('[单发模式] (如果已经在某个关卡中，则自动战斗至关卡结束)', end='\n\n')
-    res = run()
+    print('[单发模式] 如果已经在某个关卡中，则自动战斗至关卡结束', end='\n\n')
+    res = StageFight.wind_up_stage_fight()
     if res:
         print('关卡收尾结束')
     else:
