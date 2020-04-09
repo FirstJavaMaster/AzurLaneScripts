@@ -2,6 +2,7 @@ from common import PageUtils
 from common.AutoAdb import AutoAdb
 
 
+# 委托任务
 # todo 尚未完成
 def run():
     PageUtils.to_main_page()

@@ -18,12 +18,6 @@ def pick_stage(stage_temp_list):
     if in_stage:
         return
 
-    # todo 这部分要转移到新的脚本中
-    # 如果发现现在在困难关卡，且次数为0，则终止
-    if auto_adb.click('temp_images/no-chance-for-hard.png'):
-        print('困难关卡机会已用尽，程序终止')
-        exit()
-
     # 确定进入
     start_time = datetime.now()
     while True:
