@@ -1,6 +1,6 @@
 import time
 
-from common import PortUtils, PathUtils
+from common import PathUtils
 from common.AutoAdb import AutoAdb
 from common.Slider import Slider
 
@@ -65,11 +65,8 @@ class TeamLeader:
 
             enemy_loc.click()
             # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
-            res = adb.wait('temp_images/fight/fight.png', max_wait_time=8,
-                           episode=self.accident_when_run).click()
+            res = adb.wait('temp_images/fight/fight.png', max_wait_time=8, episode=self.accident_when_run).is_valuable()
             if res:
-                # 等到进入战斗后再返回
-                adb.wait('temp_images/fight/in-fighting.png', cycle_interval=2, episode=self.accident_when_confirm)
                 return True
             else:
                 # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
@@ -87,9 +84,3 @@ class TeamLeader:
         adb.click('temp_images/stage/get-tool.png')
         # 处理伏击
         adb.click('temp_images/stage/escape.png')
-
-    # 处理点击确定时的意外情况
-    def accident_when_confirm(self):
-        retired = PortUtils.check_port_full()
-        if retired:  # 如果发生了退役操作，则再次点击确认按钮
-            self.adb.wait('temp_images/fight/fight.png').click()

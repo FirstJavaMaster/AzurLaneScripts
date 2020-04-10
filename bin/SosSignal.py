@@ -26,9 +26,10 @@ def deal_sos_sign(adb):
     if goto_stage_page:
         # 有些情况会直接进入关卡，因此不需要“点击关卡”
         print('发现已经开启的关卡，即将进入战斗。。。')
-        if not StageFight.in_stage_already():
-            StageFight.pick_stage(['temp_images/sos/stage-icon.png'])
-        StageFight.fight_in_stage()
+        if PageUtils.in_enemy_page():
+            StageFight.fight_all_enemy()
+        else:
+            StageFight.fight_stage(['temp_images/sos/stage-icon.png'])
         return True
     # 搜索新的信号
     print('搜索新的信号。。。')
@@ -36,8 +37,7 @@ def deal_sos_sign(adb):
     searched = adb.wait('temp_images/confirm-btn.png', max_wait_time=5).click()
     if not searched:  # 如果没有搜索到，则说明已经没有信号了
         return False
-    StageFight.pick_stage(['temp_images/sos/stage-icon.png'])
-    StageFight.fight_in_stage()
+    StageFight.fight_stage(['temp_images/sos/stage-icon.png'])
     return True
 
 

@@ -14,8 +14,7 @@ def run():
         if adb.click('temp_images/no-chance-for-hard.png'):
             print('困难关卡机会已用尽，程序终止')
             break
-        StageFight.pick_stage(temp_list)
-        StageFight.fight_in_stage()
+        StageFight.fight_stage(temp_list)
     print('困难关卡已经结束')
 
 

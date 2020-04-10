@@ -4,6 +4,7 @@ from common.Location import Location
 
 
 # 每天领取指挥喵
+# todo 需要优化判断逻辑
 def run():
     adb = AutoAdb()
     PageUtils.to_main_page()

@@ -36,3 +36,15 @@ def to_unit_page():
     if fight:
         return to_unit_page()
     return True
+
+
+def in_stage_page():
+    return AutoAdb().check('temp_images/stage/in-unit.png')
+
+
+def in_enemy_page():
+    return AutoAdb().check('temp_images/stage/in-stage.png')
+
+
+def in_fight_page():
+    return AutoAdb().check('temp_images/fight/in-fighting.png')
