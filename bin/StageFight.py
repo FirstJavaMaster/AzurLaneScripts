@@ -111,7 +111,7 @@ def fight():
         # 持续点击右下角
         ending_loc.click()
         # 回到unit页面或stage页面也说明战斗已经结束 todo 待优化
-        if PageUtils.in_stage_page() or PageUtils.in_enemy_page() or adb.check('temp_images/main-page-button.png'):
+        if PageUtils.in_enemy_page() or PageUtils.in_stage_page() or adb.check('temp_images/main-page-button.png'):
             fight_result = True
             break
 

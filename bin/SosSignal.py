@@ -11,14 +11,15 @@ def run():
 
     PageUtils.to_unit_page()
     while True:
-        res = deal_sos_sign(adb)
+        res = deal_sos_sign()
         if not res:
             print('所有求救信号已处理完毕')
             PageUtils.to_main_page()
             break
 
 
-def deal_sos_sign(adb):
+def deal_sos_sign():
+    adb = AutoAdb()
     adb.wait('temp_images/sos/sos-signal.png').click()
 
     # 将已经开启的潜艇关卡解决掉
@@ -34,7 +35,7 @@ def deal_sos_sign(adb):
     # 搜索新的信号
     print('搜索新的信号。。。')
     adb.click('temp_images/sos/search-signal.png')
-    searched = adb.wait('temp_images/confirm-btn.png', max_wait_time=5).click()
+    searched = adb.wait('temp_images/confirm-btn.png', max_wait_time=8).click()
     if not searched:  # 如果没有搜索到，则说明已经没有信号了
         return False
     StageFight.fight_stage(['temp_images/sos/stage-icon.png'])
