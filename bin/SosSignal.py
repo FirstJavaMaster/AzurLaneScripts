@@ -5,7 +5,6 @@ from common.AutoAdb import AutoAdb
 
 def run():
     print('处理求救信号关卡。。。')
-    adb = AutoAdb()
     # 如果已经在关卡中，则先战斗
     StageFight.wind_up_stage_fight()
 
@@ -35,12 +34,19 @@ def deal_sos_sign():
     # 搜索新的信号
     print('搜索新的信号。。。')
     adb.click('temp_images/sos/search-signal.png')
-    searched = adb.wait('temp_images/sos/stage-icon.png', episode=lambda: adb.click('temp_images/confirm-btn.png'),
-                        max_wait_time=6).click()
-    if not searched:  # 如果没有搜索到，则说明已经没有信号了
-        return False
-    StageFight.confirm_stage_team()
-    return True
+    while True:
+        if adb.check('temp_images/sos/no-chance.png'):
+            print('已经没有新的信号，SOS关卡执行完毕，脚本退出')
+            exit()
+
+        # 如果有确认按钮，则点击确认，前往关卡
+        adb.click('temp_images/confirm-btn.png')
+        # 如果已经发现了关卡按钮，则点击
+        click_stage = adb.click('temp_images/sos/stage-icon.png')
+        if click_stage:
+            print('进入SOS关卡战斗。。。')
+            StageFight.confirm_stage_team()
+            return True
 
 
 if __name__ == '__main__':
