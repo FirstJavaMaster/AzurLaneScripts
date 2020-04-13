@@ -71,6 +71,9 @@ class TeamLeader:
             else:
                 # 如果点击后未进入确认界面, 说明那里不可到达, 此时去除image_rel_path_list中的值
                 image_rel_path_list.remove(enemy_loc.temp_rel_path)
+                # 如果list为空了，则恢复到原有列表
+                if len(image_rel_path_list) == 0:
+                    image_rel_path_list = PathUtils.get_temp_rel_path_list('temp_images/enemy')
 
     # 处理地图移动时的意外情况
     def accident_when_run(self):
