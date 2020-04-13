@@ -93,8 +93,8 @@ def fight():
 
     print('战斗开始 >>>')
     adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
-    print(' 战斗结束 !')
 
+    # 战斗结束
     fight_result = True
     ending_loc = Location(adb, None, 1160, 690)
     while True:
@@ -108,7 +108,6 @@ def fight():
         # 处理失败
         fail_confirm = adb.click('temp_images/fight/fail-confirm.png')
         if fail_confirm:
-            print('战斗失败！！')
             # 战队难以成型时点击确定
             adb.wait('temp_images/fight/fail-confirm-2.png', max_wait_time=3).click()
             fight_result = False
@@ -120,6 +119,7 @@ def fight():
             fight_result = True
             break
 
+    print('战斗胜利！！！' if fight_result else '战斗失败 >_<')
     # 战斗结束后可能出现紧急任务提示
     # 由于是透明遮罩, 所以无法根据其他元素是否显示而做出反应, 只能等一定的时间
     adb.wait('temp_images/confirm-btn.png', max_wait_time=2).click()
