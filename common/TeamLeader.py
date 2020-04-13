@@ -48,13 +48,18 @@ class TeamLeader:
         if self.current_team_num == 1 and adb.check('temp_images/stage/bullet-empty.png'):
             self.switch()
 
-        image_rel_path_list = PathUtils.get_temp_rel_path_list('temp_images/enemy')
-
+        # 页面滑动工具类
         slider = Slider()
+        # 敌人的模板列表
+        image_rel_path_list = PathUtils.get_temp_rel_path_list('temp_images/enemy')
         while True:
             print('寻找敌人 ... ')
             enemy_loc = adb.get_location(*image_rel_path_list)
             if enemy_loc is None:
+                # 有时没找到敌人是已经进入确认界面了
+                if adb.check('temp_images/fight/fight.png'):
+                    return True
+                # 滑动界面寻找敌人
                 slider.slide()
                 continue
 
@@ -63,6 +68,7 @@ class TeamLeader:
                 self.switch()
                 continue
 
+            # 点击敌人位置
             enemy_loc.click()
             # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
             res = adb.wait('temp_images/fight/fight.png', max_wait_time=8, episode=self.accident_when_run).is_valuable()
