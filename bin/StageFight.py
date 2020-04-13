@@ -30,8 +30,11 @@ def fight_stage(stage_temp_list):
 
     print('%s √' % loc.temp_rel_path)
     loc.click()  # 点击关卡图标
-    confirm_stage_team()  # 确认队伍
-    fight_all_enemy()  # 遇敌
+    confirm = confirm_stage_team()  # 确认队伍
+    if confirm:
+        fight_all_enemy()  # 遇敌
+    else:
+        fight_stage(stage_temp_list)  # 重新选择关卡
 
 
 # 进入关卡的确认操作
@@ -51,7 +54,9 @@ def confirm_stage_team():
         button_loc = adb.get_location(*button_list)
         if button_loc is not None:
             button_loc.click()
-        PortUtils.check_port_full()
+        retired = PortUtils.check_port_full()
+        if retired:  # 如果发生了退役，则会导致关卡进入失败，需要重新点击
+            return False
 
 
 # 执行关卡的战斗
