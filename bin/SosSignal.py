@@ -35,7 +35,8 @@ def deal_sos_sign():
     # 搜索新的信号
     print('搜索新的信号。。。')
     adb.click('temp_images/sos/search-signal.png')
-    searched = adb.wait('temp_images/confirm-btn.png', max_wait_time=8).click()
+    searched = adb.wait('temp_images/sos/stage-icon.png', episode=lambda: adb.click('temp_images/confirm-btn.png'),
+                        max_wait_time=6).click()
     if not searched:  # 如果没有搜索到，则说明已经没有信号了
         return False
     StageFight.fight_stage(['temp_images/sos/stage-icon.png'])
