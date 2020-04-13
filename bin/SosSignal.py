@@ -8,7 +8,7 @@ def run():
     # 如果已经在关卡中，则先战斗
     StageFight.wind_up_stage_fight()
 
-    PageUtils.to_unit_page()
+    PageUtils.to_stage_page()
     while True:
         res = deal_sos_sign()
         if not res:

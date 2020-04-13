@@ -23,10 +23,9 @@ def to_main_page():
             loc.click()
 
 
-def to_unit_page():
+def to_stage_page():
     adb = AutoAdb()
-    in_unit = adb.check('temp_images/stage/in-unit.png')
-    if in_unit:
+    if in_stage_page():
         return True
 
     to_main_page()
@@ -34,17 +33,17 @@ def to_unit_page():
     # 可能正处在战斗关卡，自动战斗
     fight = StageFight.wind_up_stage_fight()
     if fight:
-        return to_unit_page()
+        return to_stage_page()
     return True
 
 
 def in_stage_page():
-    return AutoAdb().check('temp_images/stage/in-unit.png')
+    return AutoAdb().check('temp_images/page/in-stage.png')
 
 
 def in_enemy_page():
-    return AutoAdb().check('temp_images/stage/in-stage.png')
+    return AutoAdb().check('temp_images/page/in-enemy.png')
 
 
 def in_fight_page():
-    return AutoAdb().check('temp_images/fight/in-fighting.png')
+    return AutoAdb().check('temp_images/page/in-fighting.png')

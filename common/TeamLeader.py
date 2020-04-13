@@ -1,6 +1,6 @@
 import time
 
-from common import PathUtils
+from common import PathUtils, PageUtils
 from common.AutoAdb import AutoAdb
 from common.Slider import Slider
 
@@ -40,8 +40,7 @@ class TeamLeader:
         # 这里要多等待几秒, 因为经常会有个动画影响寻敌
         time.sleep(3)
 
-        check = adb.check('temp_images/stage/in-unit.png')
-        if check:  # 关卡已经结束
+        if PageUtils.in_stage_page():  # 关卡已经结束
             return False
 
         # 弹药为空且当前是第一队时切换队伍

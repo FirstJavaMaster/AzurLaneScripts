@@ -23,7 +23,7 @@ def run():
         if week_day not in task['day']:
             continue
 
-        PageUtils.to_unit_page()
+        PageUtils.to_stage_page()
         adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click()
         print(loc.remark + '...已开放')
         loc.click()
