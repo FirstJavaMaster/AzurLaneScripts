@@ -1,12 +1,12 @@
-from datetime import datetime
-
 from common import PortUtils, PageUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
 from common.TeamLeader import TeamLeader
 
-
 # 选择关卡stage
+from common.Timer import Timer
+
+
 def fight_stage(stage_temp_list):
     if stage_temp_list is None or len(stage_temp_list) == 0:
         print('目标关卡未指定')
@@ -20,31 +20,27 @@ def fight_stage(stage_temp_list):
         return
 
     # 确定进入
-    start_time = datetime.now()
+    timer = Timer()
     while True:
-        duration = (datetime.now() - start_time).seconds
-        print('\r扫描目标关卡中 ... %ds ' % duration, end='')
+        print('\r扫描目标关卡中 ... %ds ' % timer.get_duration(), end='')
         loc = auto_adb.get_location(*stage_temp_list)
         if loc is not None:
             break
 
     print('%s √' % loc.temp_rel_path)
     loc.click()  # 点击关卡图标
-    confirm = confirm_stage_team()  # 确认队伍
-    if confirm:
-        fight_all_enemy()  # 遇敌
-    else:
-        fight_stage(stage_temp_list)  # 重新选择关卡
+    confirm_stage_team()  # 确认队伍
 
 
-# 进入关卡的确认操作
+# 进入关卡的确认操作。成功进入了（即使战斗失败）会返回true，否则false
 def confirm_stage_team():
     print('确认关卡队伍。。。')
     adb = AutoAdb()
     while True:
         # 如果已经进入敌人列表界面，则跳出循环
         if PageUtils.in_enemy_page():
-            break
+            fight_all_enemy()  # 战斗
+            return True
 
         button_list = [
             'temp_images/stage/immediate-start.png',  # 立刻前往
@@ -54,9 +50,7 @@ def confirm_stage_team():
         button_loc = adb.get_location(*button_list)
         if button_loc is not None:
             button_loc.click()
-        retired = PortUtils.check_port_full()
-        if retired:  # 如果发生了退役，则会导致关卡进入失败，需要重新点击
-            return False
+        PortUtils.check_port_full()
 
 
 # 执行关卡的战斗
