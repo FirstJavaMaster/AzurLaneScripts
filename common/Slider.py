@@ -1,4 +1,5 @@
 import random
+import time
 
 from common.AutoAdb import AutoAdb
 
@@ -31,6 +32,9 @@ class Slider:
             self.auto_adb.swipe(*pos_start, *pos_end)
         # +1
         self.num += 1
+
+        # 滑动完毕后等待0.5秒，有时动画导致敌人无法判断
+        time.sleep(0.5)
 
     # 单向滑动
     # direction 滑动方向，1、2、3、4分别代表上下左右
