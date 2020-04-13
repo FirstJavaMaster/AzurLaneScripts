@@ -114,12 +114,12 @@ def fight():
             break
         # 持续点击右下角
         ending_loc.click()
-        # 回到unit页面或stage页面也说明战斗已经结束 todo 待优化
+        # 回到unit页面或stage页面也说明战斗已经结束
         if PageUtils.in_enemy_page() or PageUtils.in_stage_page() or adb.check('temp_images/main-page-button.png'):
             fight_result = True
             break
 
-    print('战斗胜利！！！' if fight_result else '战斗失败 >_<')
+    print('战斗胜利~(～￣▽￣)～' if fight_result else '战斗失败 >_<')
     # 战斗结束后可能出现紧急任务提示
     # 由于是透明遮罩, 所以无法根据其他元素是否显示而做出反应, 只能等一定的时间
     adb.wait('temp_images/confirm-btn.png', max_wait_time=2).click()
