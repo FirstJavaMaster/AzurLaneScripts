@@ -39,7 +39,7 @@ def deal_sos_sign():
                         max_wait_time=6).click()
     if not searched:  # 如果没有搜索到，则说明已经没有信号了
         return False
-    StageFight.fight_stage(['temp_images/sos/stage-icon.png'])
+    StageFight.confirm_stage_team()
     return True
 
 
