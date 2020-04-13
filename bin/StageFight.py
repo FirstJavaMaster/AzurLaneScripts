@@ -29,16 +29,20 @@ def fight_stage(stage_temp_list):
 
     print('%s √' % loc.temp_rel_path)
     loc.click()  # 点击关卡图标
-    confirm_stage_team()  # 确认队伍
+    confirmed = confirm_stage_team()  # 确认队伍
+    if not confirmed:  # 如果队伍确认失败，则重新做一次
+        fight_stage(stage_temp_list)
 
 
 # 进入关卡的确认操作。成功进入了（即使战斗失败）会返回true，否则false
 def confirm_stage_team():
-    print('确认关卡队伍。。。')
     adb = AutoAdb()
+    timer = Timer()
     while True:
+        print('\r确认关卡队伍中。。。 %ds' % timer.get_duration(), end='')
         # 如果已经进入敌人列表界面，则跳出循环
         if PageUtils.in_enemy_page():
+            print(' √')
             fight_all_enemy()  # 战斗
             return True
 
@@ -50,7 +54,9 @@ def confirm_stage_team():
         button_loc = adb.get_location(*button_list)
         if button_loc is not None:
             button_loc.click()
-        PortUtils.check_port_full()
+        port_full = PortUtils.check_port_full()
+        if port_full:
+            return False
 
 
 # 执行关卡的战斗
