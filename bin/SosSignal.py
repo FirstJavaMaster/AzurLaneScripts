@@ -45,7 +45,9 @@ def deal_sos_sign():
         click_stage = adb.click('temp_images/sos/stage-icon.png')
         if click_stage:
             print('进入SOS关卡战斗。。。')
-            StageFight.confirm_stage_team()
+            confirmed = StageFight.confirm_stage_team()
+            if not confirmed:
+                continue
             return True
 
 
