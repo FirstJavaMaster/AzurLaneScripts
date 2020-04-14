@@ -39,7 +39,7 @@ def confirm_stage_team():
     adb = AutoAdb()
     timer = Timer()
     while True:
-        print('\r确认关卡队伍中。。。 %ds' % timer.get_duration(), end='')
+        print('\r确认关卡队伍中。。。 %ds ' % timer.get_duration(), end='')
         # 如果已经进入敌人列表界面，则跳出循环
         if PageUtils.in_enemy_page():
             print(' √')
