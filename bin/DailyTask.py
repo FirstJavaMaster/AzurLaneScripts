@@ -44,14 +44,11 @@ def s_c_h_w():
 # 海域突进
 def h_y_t_j():
     print('海域突进开始')
-    adb = AutoAdb()
     helper = TaskHelper()
     while True:
-        no_chance = adb.check('temp_images/daily-task/daily-task/no-chance.png')
-        if no_chance:
-            print('机会耗尽，关卡结束')
+        have_fight = helper.fight()
+        if not have_fight:
             break
-        helper.fight()
 
 
 # 斩首行动
@@ -68,14 +65,17 @@ class TaskHelper:
     y_step = 160
 
     def fight(self):
-        print('出击第 %d 关' % (self.flag + 1))
         Location(self.adb, None, self.x_pos, self.y_pos + self.y_step * self.flag).click()
-        # 切换到最右边的队伍
+        # 观察是否已经耗尽机会，如果没有切换到最右边的队伍
         while True:
+            if self.adb.check('temp_images/daily-task/daily-task/no-chance.png'):
+                print('机会已经耗尽')
+                return False
             have_right = self.adb.click('temp_images/daily-task/daily-task/right-team.png')
             if not have_right:
                 break
         # 出击
+        print('出击第 %d 关' % (self.flag + 1))
         result = StageFight.fight()
         if not result:
             print('挑战失败，目标下移。。。')
