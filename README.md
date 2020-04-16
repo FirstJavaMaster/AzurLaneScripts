@@ -94,7 +94,7 @@ tips_4: 默认读者已经有一定的动手能力.
 **注意：**
 
 + temp_images/target-stage 存放普通关卡的模板文件
-+ temp_images/target-stage-hard 存放苦难关卡的模板文件
++ temp_images/target-stage-hard 存放困难关卡的模板文件
 
 之所以分到两个文件夹是因为其模板图片在两种模式下往往是一样的，脚本会混淆两种模式。
 
