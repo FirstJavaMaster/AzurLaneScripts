@@ -25,7 +25,7 @@ def run():
 
         PageUtils.to_stage_page()
         adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click()
-        print(loc.remark + '...已开放')
+        print(loc.remark + '开放')
         loc.click()
         Location(adb, None, 640, 400).click()
         # 执行方法
@@ -36,19 +36,13 @@ def run():
 # 商船护卫
 def s_c_h_w():
     print('商船护卫开始。。。')
-    helper = TaskHelper()
-    while True:
-        helper.fight()
+    TaskHelper().run()
 
 
 # 海域突进
 def h_y_t_j():
     print('海域突进开始')
-    helper = TaskHelper()
-    while True:
-        have_fight = helper.fight()
-        if not have_fight:
-            break
+    TaskHelper().run()
 
 
 # 斩首行动
@@ -63,6 +57,13 @@ class TaskHelper:
     x_pos = 450
     y_pos = 150
     y_step = 160
+
+    def run(self):
+        while True:
+            have_fight = self.fight()
+            if not have_fight:
+                print('日常任务战斗结束')
+                break
 
     def fight(self):
         Location(self.adb, None, self.x_pos, self.y_pos + self.y_step * self.flag).click()
