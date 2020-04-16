@@ -37,6 +37,7 @@ def deal_sos_sign():
     while True:
         if adb.check('temp_images/sos/no-chance.png'):
             print('已经没有新的信号，SOS关卡执行完毕，脚本退出')
+            PageUtils.to_stage_page()
             exit()
 
         # 如果有确认按钮，则点击确认，前往关卡
