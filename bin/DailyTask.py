@@ -53,25 +53,25 @@ def z_s_x_d():
 
 class TaskHelper:
     adb = AutoAdb()
-    flag = 3
+    flag = 0
     x_pos = 450
     y_pos = 150
     y_step = 160
 
     def run(self):
-        while True:
-            have_fight = self.fight()
-            if not have_fight:
-                print('日常任务战斗结束')
-                break
-
-    def fight(self):
+        # 点击出击
         Location(self.adb, None, self.x_pos, self.y_pos + self.y_step * self.flag).click()
-        # 观察是否已经耗尽机会，如果没有切换到最右边的队伍
+        # 观察是否已经耗尽机会
         while True:
+            # 出现出击按钮，说明已经进入关卡了
+            if self.adb.check('temp_images/fight/fight.png'):
+                break
+            # 如果出现没有机会提示，则说明没机会了
             if self.adb.check('temp_images/daily-task/daily-task/no-chance.png'):
-                print('机会已经耗尽')
-                return False
+                print('机会已经耗尽，日常任务战斗结束')
+                return
+        # 切换到最右边的队伍
+        while True:
             have_right = self.adb.click('temp_images/daily-task/daily-task/right-team.png')
             if not have_right:
                 break
@@ -81,8 +81,13 @@ class TaskHelper:
         if not result:
             print('挑战失败，目标下移。。。')
             self.step_add()
+        # 调用自己，继续战斗
+        self.run()
 
     def step_add(self):
+        if self.flag >= 3:
+            print('失败次数过多，停止战斗')
+            exit()
         if self.flag < 3:
             print('关卡游标下移')
             self.flag += 1
