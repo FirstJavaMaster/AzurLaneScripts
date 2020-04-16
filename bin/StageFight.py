@@ -95,25 +95,27 @@ def fight():
     adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
 
     # 战斗结束
-    fight_result = True
+    fight_result = None
     ending_loc = Location(adb, None, 1160, 690)
     while True:
+        if fight_result is None:
+            # 处理新船
+            new_ship = adb.check('temp_images/fight/new-ship.png')
+            if new_ship:
+                print('发现新船!!')
+                fight_result = True
+                ending_loc.click()
+                adb.click('temp_images/confirm-btn.png')
+                continue
+            # 处理失败
+            fail_confirm = adb.click('temp_images/fight/fail-confirm.png')
+            if fail_confirm:
+                fight_result = False
+                # 战队难以成型时点击确定
+                adb.wait('temp_images/confirm-btn.png', max_wait_time=3).click()
+                break
         # 持续点击右下角
-        ending_loc.click()
-        # 处理新船
-        new_ship = adb.check('temp_images/fight/new-ship.png')
-        if new_ship:
-            print('发现新船!!')
-            ending_loc.click()
-            adb.wait('temp_images/confirm-btn.png', max_wait_time=3).click()
-            continue
-        # 处理失败
-        fail_confirm = adb.click('temp_images/fight/fail-confirm.png')
-        if fail_confirm:
-            # 战队难以成型时点击确定
-            adb.wait('temp_images/confirm-btn.png', max_wait_time=3).click()
-            fight_result = False
-            break
+        ending_loc.click(2)
         # 回到 stage列表页面 或 敌人列表页面 也说明战斗已经结束
         if adb.check('temp_images/page/in-stage.png',  # stage列表
                      'temp_images/page/in-enemy.png',  # enemy列表
