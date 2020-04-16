@@ -105,7 +105,7 @@ def fight():
         if new_ship:
             print('发现新船!!')
             ending_loc.click()
-            adb.click('temp_images/confirm-btn.png')
+            adb.wait('temp_images/confirm-btn.png', max_wait_time=3).click()
             continue
         # 处理失败
         fail_confirm = adb.click('temp_images/fight/fail-confirm.png')
