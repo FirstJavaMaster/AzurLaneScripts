@@ -5,10 +5,10 @@
 cache/
 config.ini
 
-temp_images/target-stage
+temp_images/target-stage/
 !temp_images/target-stage/example.png
 
-temp_images/target-stage-hard
+temp_images/target-stage-hard/
 !temp_images/target-stage-hard/example.png
 
 # IntelliJ project files
