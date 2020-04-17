@@ -11,7 +11,7 @@ def run():
     temp_list = PathUtils.get_temp_rel_path_list('temp_images/target-stage-hard')
     while True:
         # 如果发现次数为0，则终止
-        if adb.click('temp_images/no-chance-for-hard.png'):
+        if adb.click('temp_images/stage/no-chance-for-hard.png'):
             print('困难关卡机会已用尽，程序终止')
             break
         StageFight.fight_stage(temp_list)

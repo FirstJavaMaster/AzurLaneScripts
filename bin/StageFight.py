@@ -119,7 +119,7 @@ def fight():
         # 回到 stage列表页面 或 敌人列表页面 也说明战斗已经结束
         if adb.check('temp_images/page/in-stage.png',  # stage列表
                      'temp_images/page/in-enemy.png',  # enemy列表
-                     'temp_images/main-page-button.png'):  # 日常任务结束后的界面
+                     'temp_images/page/main-page-button.png'):  # 日常任务结束后的界面
             fight_result = True
             break
 
