@@ -21,8 +21,13 @@ def get_abs_path(*rel_paths):
 
 # 从指定文件夹获取模板文件列表
 def get_temp_rel_path_list(rel_dir):
+    temp_rel_path_list = []
     image_name_list = os.listdir(get_abs_path(rel_dir))
-    return [*map(lambda image_name: rel_dir + '/' + image_name, image_name_list)]
+    for image_name in image_name_list:
+        if 'example.png' in image_name:
+            continue
+        temp_rel_path_list.append(rel_dir + '/' + image_name)
+    return temp_rel_path_list
 
 
 # 创建文件夹。确保能创建成功
