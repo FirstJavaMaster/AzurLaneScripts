@@ -4,7 +4,7 @@ import os
 # 获取项目路径
 def get_work_dir():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.dirname(curr_dir)
+    return os.path.dirname(curr_dir).replace('\\', '/')
 
 
 # 获取项目的缓存路径
