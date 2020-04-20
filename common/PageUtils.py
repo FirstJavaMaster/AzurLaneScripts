@@ -13,12 +13,12 @@ def to_main_page():
     ]
     while True:
         # 如果已经在主页则直接返回
-        if adb.check("temp_images/page/main-page.png"):
+        if in_main_page():
             return True
         # 尝试点击返回按钮
         loc = adb.get_location(*temp_list)
         if loc is None:  # 如果没找到合理的返回按钮，则点击左上角尝试
-            Location(adb, None, 18, 18).click()
+            Location(adb, None, 10, 10).click()
         else:
             loc.click()
 
@@ -35,6 +35,10 @@ def to_stage_page():
     if fight:
         return to_stage_page()
     return True
+
+
+def in_main_page():
+    return AutoAdb().check('temp_images/page/in-main.png')
 
 
 def in_stage_page():
