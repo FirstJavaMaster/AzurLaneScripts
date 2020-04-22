@@ -1,3 +1,5 @@
+import time
+
 from common import PortUtils, PageUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
@@ -133,8 +135,13 @@ def fight():
 # 收尾关卡战斗：如果已经在关卡中，就战斗至结束
 # 如果发生了战斗，则返回True，否则False
 def wind_up_stage_fight():
+    timer = Timer()
+    while PageUtils.in_fight_page():
+        print('\r战斗中。。。 %ds ' % timer.get_duration(), end='')
+        time.sleep(5)
+
     if PageUtils.in_enemy_page():
-        print('正在战斗关卡内，进行的关卡收尾。。。')
+        print('进行关卡收尾。。。')
         fight_all_enemy()
         return True
     return False
