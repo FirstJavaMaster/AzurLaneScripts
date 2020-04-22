@@ -6,10 +6,11 @@ from common.Location import Location
 def to_main_page():
     adb = AutoAdb()
     temp_list = [
+        'temp_images/page/main-page-button.png',  # 主页按钮
         'temp_images/page/close.png',  # 关闭按钮
         'temp_images/page/close-1.png',  # 关闭按钮
-        'temp_images/page/main-page-button.png',  # 主页按钮
-        'temp_images/page/main-page-button-2.png'  # 返回按钮
+        'temp_images/page/back.png'  # 返回按钮
+        'temp_images/page/back-2.png'  # 返回按钮
     ]
     while True:
         # 如果已经在主页则直接返回
@@ -35,6 +36,17 @@ def to_stage_page():
     if fight:
         return to_stage_page()
     return True
+
+
+def back():
+    temp_list = [
+        'temp_images/page/back.png'  # 返回按钮
+        'temp_images/page/back-2.png'  # 返回按钮
+    ]
+    loc = AutoAdb().get_location(*temp_list)
+    if loc is not None:
+        print('点击页面返回按钮')
+        loc.click()
 
 
 def in_main_page():

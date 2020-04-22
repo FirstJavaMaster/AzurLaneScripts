@@ -115,7 +115,7 @@ def fight():
                 adb.wait('temp_images/confirm-btn.png', max_wait_time=3).click()
                 break
         # 持续点击右下角
-        ending_loc.click(2)
+        ending_loc.click()
         # 回到 stage列表页面 或 敌人列表页面 也说明战斗已经结束
         if adb.check('temp_images/page/in-stage.png',  # stage列表
                      'temp_images/page/in-enemy.png',  # enemy列表
