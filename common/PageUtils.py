@@ -57,6 +57,10 @@ def in_stage_page():
     return AutoAdb().check('temp_images/page/in-stage.png')
 
 
+def in_operation_page():
+    return AutoAdb().check('temp_images/page/in-operation.png')
+
+
 def in_enemy_page():
     return AutoAdb().check('temp_images/page/in-enemy.png')
 

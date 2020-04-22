@@ -58,10 +58,6 @@ class TeamLeader:
                 # 有时没找到敌人是已经进入确认界面了
                 if adb.check('temp_images/fight/fight.png'):
                     return True
-                # 滑动前确认在敌人页面
-                while not PageUtils.in_enemy_page():
-                    PageUtils.back()
-                    time.sleep(1)
                 # 滑动界面寻找敌人
                 slider.slide()
                 continue

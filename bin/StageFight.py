@@ -67,6 +67,12 @@ def fight_all_enemy():
     while True:
         team_leader.provoke_enemy()
         fight()
+        # 如果在演习界面
+        if PageUtils.in_operation_page():
+            print('误入演习界面，退出')
+            PageUtils.back()
+            time.sleep(1)
+
         # 如果在单元界面，说明关卡已经结束
         if PageUtils.in_stage_page():
             print('关卡战斗结束')
