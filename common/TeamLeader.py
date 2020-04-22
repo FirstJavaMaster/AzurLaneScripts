@@ -67,6 +67,9 @@ class TeamLeader:
                 self.switch()
                 continue
 
+            # 有时敌人离状态栏太近，这时加大Y轴
+            if enemy_loc.pos_y < 65:
+                enemy_loc.pos_y = 65
             # 点击敌人位置
             enemy_loc.click()
             # 等待进击按钮出现, 期间会不断处理意外情况, 如果指定时间内出现按钮, 则执行结束, 否则再次循环
