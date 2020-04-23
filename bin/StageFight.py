@@ -100,6 +100,12 @@ def fight():
             exit()
 
     print('战斗开始 >>>')
+    return fight_finish()
+
+
+# 监控战斗的画面，处理战斗结束操作
+def fight_finish():
+    adb = AutoAdb()
     adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
 
     # 战斗结束
@@ -127,9 +133,13 @@ def fight():
         # 回到 stage列表页面 或 敌人列表页面 也说明战斗已经结束
         if adb.check('temp_images/page/in-stage.png',  # stage列表
                      'temp_images/page/in-enemy.png',  # enemy列表
-                     'temp_images/page/main-page-button.png'):  # 日常任务结束后的界面
+                     'temp_images/page/in-daily.png'):  # 日常任务结束后的界面
             fight_result = True
             break
+        if adb.check('temp_images/page/in-operation.png'):
+            print('误入演习界面，退出。。。')
+            PageUtils.back()
+            continue
 
     print('战斗胜利~(～￣▽￣)～' if fight_result else '战斗失败 >_<')
     # 战斗结束后可能出现紧急任务提示
@@ -141,13 +151,12 @@ def fight():
 # 收尾关卡战斗：如果已经在关卡中，就战斗至结束
 # 如果发生了战斗，则返回True，否则False
 def wind_up_stage_fight():
-    timer = Timer()
-    while PageUtils.in_fight_page():
-        print('\r战斗中。。。 %ds ' % timer.get_duration(), end='')
-        time.sleep(5)
+    if PageUtils.in_fight_page():
+        print('正在战斗。。。')
+        fight_finish()
 
     if PageUtils.in_enemy_page():
-        print('进行关卡收尾。。。')
+        print('扫荡剩余敌军。。。')
         fight_all_enemy()
         return True
     return False

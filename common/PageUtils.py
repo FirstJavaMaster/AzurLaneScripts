@@ -40,7 +40,7 @@ def to_stage_page():
 
 def back():
     temp_list = [
-        'temp_images/page/back.png'  # 返回按钮
+        'temp_images/page/back.png',  # 返回按钮
         'temp_images/page/back-2.png'  # 返回按钮
     ]
     loc = AutoAdb().get_location(*temp_list)
