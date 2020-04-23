@@ -9,7 +9,7 @@ def to_main_page():
         'temp_images/page/main-page-button.png',  # 主页按钮
         'temp_images/page/close.png',  # 关闭按钮
         'temp_images/page/close-1.png',  # 关闭按钮
-        'temp_images/page/back.png'  # 返回按钮
+        'temp_images/page/back.png',  # 返回按钮
         'temp_images/page/back-2.png'  # 返回按钮
     ]
     while True:
