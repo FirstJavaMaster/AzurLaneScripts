@@ -47,8 +47,8 @@ class AutoAdb:
             return Location(self, temp_rel_path, x, y)
         return None
 
-    def check(self, *temp_rel_path_list):
-        loc = self.get_location(*temp_rel_path_list)
+    def check(self, *temp_rel_path_list, threshold=threshold):
+        loc = self.get_location(*temp_rel_path_list, threshold=threshold)
         return loc is not None
 
     def click(self, temp_rel_path, threshold=threshold, wait_time=wait_time):

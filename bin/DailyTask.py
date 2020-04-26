@@ -8,55 +8,41 @@ from common.Location import Location
 
 
 def run():
+    print('每日任务开始。。。')
     adb = AutoAdb()
 
     task_list = [
-        {'loc': Location(adb, None, 160, 400, '商船护卫'), 'day': [1, 4, 7], 'fuc': s_c_h_w},
-        {'loc': Location(adb, None, 370, 400, '海域突进'), 'day': [2, 5, 7], 'fuc': h_y_t_j},
-        {'loc': Location(adb, None, 900, 400, '斩首行动'), 'day': [3, 6, 7], 'fuc': z_s_x_d}
+        {'loc': Location(adb, None, 160, 400, '商船护卫'), 'day': [1, 4, 7]},
+        {'loc': Location(adb, None, 370, 400, '海域突进'), 'day': [2, 5, 7]},
+        {'loc': Location(adb, None, 900, 400, '斩首行动'), 'day': [3, 6, 7]}
     ]
 
     week_day = datetime.datetime.now().weekday() + 1
-    print('今天是周', week_day)
     for task in task_list:
-        loc = task['loc']
+        task_loc = task['loc']
         if week_day not in task['day']:
             continue
 
         PageUtils.to_stage_page()
         adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click()
-        print(loc.remark + '开放')
-        loc.click()
+        task_loc.click()
         Location(adb, None, 640, 400).click()
         # 执行方法
-        task['fuc']()
+        print('今天是周%d，%s开放' % (week_day, task_loc.remark))
+        TaskHelper(task_loc.remark).run()
     PageUtils.to_main_page()
-
-
-# 商船护卫
-def s_c_h_w():
-    print('商船护卫开始。。。')
-    TaskHelper().run()
-
-
-# 海域突进
-def h_y_t_j():
-    print('海域突进开始')
-    TaskHelper().run()
-
-
-# 斩首行动
-def z_s_x_d():
-    print('斩首行动开始')
-    pass
 
 
 class TaskHelper:
     adb = AutoAdb()
+    task_name = None
     flag = 0
     x_pos = 450
     y_pos = 150
     y_step = 160
+
+    def __init__(self, task_name):
+        self.task_name = task_name
 
     def run(self):
         # 点击出击
@@ -67,8 +53,10 @@ class TaskHelper:
             if self.adb.check('temp_images/fight/fight.png'):
                 break
             # 如果出现没有机会提示，则说明没机会了
-            if self.adb.check('temp_images/daily-task/daily-task/no-chance.png'):
-                print('机会已经耗尽，日常任务战斗结束')
+            if self.adb.check('temp_images/daily-task/daily-task/no-chance.png',
+                              'temp_images/daily-task/daily-task/no-chance-2.png',
+                              threshold=0.95):
+                print('机会耗尽，%s结束' % self.task_name)
                 return
         # 切换到最右边的队伍
         while True:
@@ -96,4 +84,5 @@ class TaskHelper:
 
 
 if __name__ == '__main__':
+    AutoAdb(test_device=True)
     run()
