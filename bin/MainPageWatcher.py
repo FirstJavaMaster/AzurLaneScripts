@@ -47,4 +47,5 @@ def deal_missions(adb):
 
 
 if __name__ == '__main__':
+    print('！！！未完成脚本！！！')
     run()

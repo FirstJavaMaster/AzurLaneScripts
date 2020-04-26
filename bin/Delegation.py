@@ -25,4 +25,5 @@ def run():
 
 
 if __name__ == '__main__':
+    print('！！！未完成脚本！！！')
     run()
