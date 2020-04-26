@@ -4,50 +4,50 @@ from common.Location import Location
 
 
 # 每天领取指挥喵
-# todo 需要优化判断逻辑
 def run():
     adb = AutoAdb()
+    blank_loc = Location(adb, None, 600, 30)
+
     PageUtils.to_main_page()
     # 点击生活区
     Location(adb, None, 580, 680).click()
     # 点击指挥喵
     Location(adb, None, 980, 460).click()
     # 判断有无免费订购。
-    have_free = adb.click("temp_images/daily-task/meow/free-meow.png")
+    have_free = adb.click("temp_images/daily-task/meow/free-meow.png", threshold=0.95)
     if have_free:
         # 第二次判断
-        have_free = adb.check("temp_images/daily-task/meow/free-meow-1.png")
+        have_free = adb.check("temp_images/daily-task/meow/free-meow-1.png", threshold=0.95)
     if have_free:
-        # 领取免费
-        Location(adb, None, 900, 460).click()
+        print('领取每日免费喵箱...')
+        # 结算
+        adb.wait('temp_images/daily-task/meow/buy.png').click()
         # 点击确定
-        Location(adb, None, 780, 450).click()
+        adb.wait('temp_images/daily-task/meow/confirm.png').click()
         # 二次确定
-        adb.wait("temp_images/daily-task/meow/free-meow-confirm.png").click()
+        adb.wait("temp_images/click-to-continue.png").click()
         # 关闭领取对话框
-        Location(adb, None, 640, 700).click()
+        blank_loc.click()
 
     # 点击训练
     Location(adb, None, 1200, 680).click()
-    # 点击“全部完成”
-    adb.wait("temp_images/daily-task/meow/finish-all.png").click(2)
-    # 将所有完成提示点击掉
-    while True:
-        find_finish_all = adb.check("temp_images/daily-task/meow/finish-all.png")
-        if find_finish_all:
-            break
-        Location(adb, None, 640, 20).click()
+    # 等待对话框打开
+    adb.wait('temp_images/daily-task/meow/in-lesson-page.png')
+    while adb.click('temp_images/daily-task/meow/lesson-finish.png'):
+        print('领取训练完成的喵...')
+        adb.wait('temp_images/daily-task/meow/new-meow-btn.png').click()
 
     # 点击“开始训练”
-    Location(adb, None, 970, 560).click()
+    adb.wait('temp_images/daily-task/meow/start-lesson.png').click()
     # 点击“一键选择”
     adb.wait("temp_images/daily-task/meow/pick-all.png").click()
     # 点击“开始训练”
-    Location(adb, None, 970, 560).click()
+    adb.wait('temp_images/daily-task/meow/start-lesson.png').click()
     # 点击确认
-    adb.wait("temp_images/daily-task/meow/birth-start-confirm.png", max_wait_time=3).click()
+    adb.wait("temp_images/daily-task/meow/confirm.png", max_wait_time=3).click()
     # 回到主页
     PageUtils.to_main_page()
+    print('指挥喵处理完毕')
 
 
 if __name__ == '__main__':
