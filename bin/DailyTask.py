@@ -9,6 +9,9 @@ from common.Location import Location
 
 def run():
     print('每日任务开始。。。')
+    print('目前仅支持 ”商船护卫“、”海域突进“、“斩首行动” 三个类别。')
+    print('“战术研修”和“破交作战”由于战力要求和操控要求比较高，因此暂不能自动化。')
+    print()
     adb = AutoAdb()
 
     task_list = [
