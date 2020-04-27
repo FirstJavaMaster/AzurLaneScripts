@@ -35,8 +35,13 @@ def run():
     adb.wait('temp_images/daily-task/meow/in-lesson-page.png')
     while adb.click('temp_images/daily-task/meow/lesson-finish.png'):
         print('领取训练完成的喵...')
-        adb.wait('temp_images/daily-task/meow/new-meow-btn.png').click()
+        while True:
+            if adb.click('temp_images/daily-task/meow/new-meow-btn.png'):
+                continue
+            if adb.check('temp_images/daily-task/meow/in-lesson-page.png'):
+                break
 
+    print('训练新的喵...')
     # 点击“开始训练”
     adb.wait('temp_images/daily-task/meow/start-lesson.png').click()
     # 点击“一键选择”
