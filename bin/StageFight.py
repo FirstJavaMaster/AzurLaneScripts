@@ -64,11 +64,14 @@ def fight_all_enemy():
     team_leader = TeamLeader()
     while True:
         team_leader.provoke_enemy()
-        fight()
+        fight_result = fight()
         # 如果在单元界面，说明关卡已经结束
         if PageUtils.in_stage_page():
             print('关卡战斗结束')
-            break
+            if fight_result:
+                break
+            print('boss战失败 或 所有舰队均不能成型, 为避免更多损失, 脚本终止')
+            exit()
 
 
 # fight前确认team，监控fight，fight收尾
@@ -96,6 +99,7 @@ def fight():
 
 
 # 监控战斗的画面，处理战斗结束操作
+# 战斗胜利时返回True，失败时返回false
 def fight_finish():
     adb = AutoAdb()
     adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
