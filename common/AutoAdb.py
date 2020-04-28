@@ -62,17 +62,20 @@ class AutoAdb:
 
     def wait(self, temp_rel_path, threshold=threshold, cycle_interval=0, max_wait_time=None, episode=None):
         timer = Timer()
+        none_loc = Location(self, None, None, None)
         while True:
             duration = timer.get_duration()
             print('\r > wait %s ... %ds ' % (temp_rel_path, duration), end='')
 
             if max_wait_time is not None and 0 < max_wait_time < duration:
                 print(' ×', flush=True)
-                return Location(self, None, None, None)
+                return none_loc
 
             if episode is not None:
                 try:
-                    episode()
+                    res = episode()
+                    if res is not None and not res:
+                        return none_loc
                 except Exception as e:
                     print('过程方法执行异常')
                     print(e)

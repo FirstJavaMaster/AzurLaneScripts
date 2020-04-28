@@ -10,6 +10,7 @@ from common.Slider import Slider
 class TeamLeader:
     adb = AutoAdb()
     current_team_num = 1  # 当前是第几个队伍
+    step_limit = False
 
     # 判断当前是第几个队伍
     # 此操作会导致地图发生位移！！因此，此方法被调用前的位置信息会失效
@@ -84,16 +85,32 @@ class TeamLeader:
                 # 如果list为空了，则恢复到原有列表
                 if len(image_rel_path_list) == 0:
                     image_rel_path_list = PathUtils.get_temp_rel_path_list('temp_images/enemy')
+            # 如果发现了移动距离限制, 则一直等待下去, 等到用户点击敌人进入战斗确认页面
+            if self.step_limit:
+                print('发现移动距离限制, 请手动点击敌人, 进入战斗页后脚本将继续进行')
+                adb.wait('temp_images/fight/fight.png')
+                return True
 
     # 处理地图移动时的意外情况
+    # 可继续进行时返回True, 没有必要继续等待时返回False
     def accident_when_run(self):
         adb = self.adb
+        # 移动距离限制
+        step_limit = adb.check('temp_images/fight/step-limit.png')
+        if step_limit:
+            self.step_limit = True
+            return False
         # 自动战斗
         res = adb.click('temp_images/fight/auto-fight-confirm-1.png')
         if res:
             print('确认自律战斗')
             adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
+            return True
         # 处理途中获得道具的提示
-        adb.click('temp_images/stage/get-tool.png')
+        get_tool = adb.click('temp_images/stage/get-tool.png')
+        if get_tool:
+            return False
         # 处理伏击
-        adb.click('temp_images/stage/escape.png')
+        escape = adb.click('temp_images/stage/escape.png')
+        if escape:
+            return True
