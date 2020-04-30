@@ -38,6 +38,8 @@ def run():
         while True:
             if adb.click('temp_images/daily-task/meow/new-meow-btn.png'):
                 continue
+            if adb.click('temp_images/daily-task/meow/confirm.png'):
+                continue
             if adb.check('temp_images/daily-task/meow/in-lesson-page.png'):
                 break
 
