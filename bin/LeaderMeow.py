@@ -33,7 +33,7 @@ def run():
     Location(adb, None, 1200, 680).click()
     # 等待对话框打开
     adb.wait('temp_images/daily-task/meow/in-lesson-page.png')
-    while adb.click('temp_images/daily-task/meow/lesson-finish.png'):
+    while adb.click('temp_images/daily-task/meow/lesson-finish.png', wait_time=2):
         print('领取训练完成的喵...')
         while True:
             if adb.click('temp_images/daily-task/meow/new-meow-btn.png'):
