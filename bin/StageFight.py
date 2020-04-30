@@ -14,10 +14,7 @@ def fight_stage(stage_temp_list):
 
     auto_adb = AutoAdb()
     # 判断是否已经在关卡中
-    in_enemy = PageUtils.in_enemy_page()
-    if in_enemy:
-        fight_all_enemy()
-        return
+    wind_up_stage_fight()
 
     # 确定进入
     timer = Timer()
@@ -29,12 +26,16 @@ def fight_stage(stage_temp_list):
 
     print('%s √' % loc.temp_rel_path)
     loc.click()  # 点击关卡图标
-    confirmed = confirm_stage_team()  # 确认队伍
-    if not confirmed:  # 如果队伍确认失败，则重新做一次
+    confirm_result = confirm_stage_team()  # 确认队伍, 战斗
+    if confirm_result is None:  # 如果关卡进入失败, 则重新尝试
+        print('关卡进入失败, 重新尝试...')
         fight_stage(stage_temp_list)
+    return confirm_result
 
 
-# 进入关卡的确认操作。成功进入了（即使战斗失败）会返回true，否则false
+# 进入关卡的确认, 然后执行战斗。
+# 未成功进入关卡会返回None
+# 成功进入了会返回战斗结果 true false
 def confirm_stage_team():
     adb = AutoAdb()
     timer = Timer()
@@ -43,8 +44,7 @@ def confirm_stage_team():
         # 如果已经进入敌人列表界面，则跳出循环
         if PageUtils.in_enemy_page():
             print(' √')
-            fight_all_enemy()  # 战斗
-            return True
+            break
 
         button_list = [
             'temp_images/stage/immediate-start.png',  # 立刻前往
@@ -55,8 +55,10 @@ def confirm_stage_team():
         if button_loc is not None:
             button_loc.click()
         port_full = PortUtils.check_port_full()
-        if port_full:
-            return False
+        if port_full:  # 如果发生了退役, 则返回None, 调用者尝试重新点击
+            return None
+    # 战斗
+    return fight_all_enemy()
 
 
 # 执行关卡的战斗
@@ -67,11 +69,8 @@ def fight_all_enemy():
         fight_result = fight()
         # 如果在单元界面，说明关卡已经结束
         if PageUtils.in_stage_page():
-            print('关卡战斗结束')
-            if fight_result:
-                break
-            print('boss战失败 或 所有舰队均不能成型, 为避免更多损失, 脚本终止')
-            exit()
+            print('所有敌船均被击沉 <(￣︶￣)>' if fight_result else '未能击沉所有敌船 (。﹏。*)')
+            return fight_result
 
 
 # fight前确认team，监控fight，fight收尾
