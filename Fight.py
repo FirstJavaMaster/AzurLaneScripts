@@ -18,7 +18,7 @@ def run():
         fight_recorder.append(fight_result)
         fight_recorder.print_recorder()
         # 连续失败两次就停止战斗
-        if fight_recorder.get_total_count() >= 2:
+        if fight_recorder.get_last_fail_count() >= 2:
             print('连续 2 次关卡战斗失败, 为了避免更多损失脚本自动退出')
             exit()
         if max_stage_fight_times is not None and fight_recorder.get_total_count() >= max_stage_fight_times:
