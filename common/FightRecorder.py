@@ -16,8 +16,8 @@ class FightRecorder:
 
     def get_last_fail_count(self):
         count = 0
-        for i in range(len(self.fight_result_list), -1, -1):
-            if self.fight_result_list[i]:
+        for result in self.fight_result_list[::-1]:
+            if result:
                 return count
             else:
                 count += 1
