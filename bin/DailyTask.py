@@ -28,8 +28,8 @@ def run():
 
         PageUtils.to_stage_page()
         adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click()
-        task_loc.click()
-        Location(adb, None, 640, 400).click()
+        task_loc.click(2)  # 点击对应模式, 移动到页面中间
+        Location(adb, None, 640, 400).click()  # 点击中间, 进入模式
         # 执行方法
         print('今天是周%d，%s开放' % (week_day, task_loc.remark))
         TaskHelper(task_loc.remark).run()
