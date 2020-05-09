@@ -18,6 +18,7 @@ class FightRecorder:
         count = 0
         for result in self.fight_result_list[::-1]:
             if result:
-                return count
+                break
             else:
                 count += 1
+        return count
