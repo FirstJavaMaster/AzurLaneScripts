@@ -27,7 +27,7 @@ def run():
             continue
 
         PageUtils.to_stage_page()
-        adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click()
+        adb.wait('temp_images/daily-task/daily-task/goto-daily-task.png').click(2)
         task_loc.click(2)  # 点击对应模式, 移动到页面中间
         Location(adb, None, 640, 400).click()  # 点击中间, 进入模式
         # 执行方法
