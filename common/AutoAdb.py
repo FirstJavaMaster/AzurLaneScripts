@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import time
 
 import cv2
 
@@ -60,7 +59,7 @@ class AutoAdb:
     def swipe(self, start_x, start_y, end_x, end_y, duration=1500):
         self.run('shell input swipe %d %d %d %d %d' % (start_x, start_y, end_x, end_y, duration))
 
-    def wait(self, temp_rel_path, threshold=threshold, cycle_interval=0, max_wait_time=None, episode=None):
+    def wait(self, temp_rel_path, threshold=threshold, max_wait_time=None, episode=None):
         timer = Timer()
         none_loc = Location(self, None, None, None)
         while True:
@@ -84,6 +83,3 @@ class AutoAdb:
             if loc is not None:
                 print(' √', flush=True)
                 return loc
-
-            if cycle_interval > 0:
-                time.sleep(cycle_interval)

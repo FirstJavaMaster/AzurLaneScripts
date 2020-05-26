@@ -5,6 +5,7 @@ from bin import StageFight
 from common import PageUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
+from common.TeamLeader import TeamLeader
 
 
 def run():
@@ -50,6 +51,7 @@ class TaskHelper:
     def run(self):
         # 点击出击
         Location(self.adb, None, self.x_pos, self.y_pos + self.y_step * self.flag).click()
+        TeamLeader().auto_fight_confirm()
         # 观察是否已经耗尽机会
         while True:
             # 出现出击按钮，说明已经进入关卡了

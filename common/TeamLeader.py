@@ -101,11 +101,7 @@ class TeamLeader:
             self.step_limit = True
             return False
         # 自动战斗
-        res = adb.click('temp_images/fight/auto-fight-confirm-1.png')
-        if res:
-            print('确认自律战斗')
-            adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
-            return True
+        self.auto_fight_confirm()
         # 处理途中获得道具的提示
         get_tool = adb.click('temp_images/stage/get-tool.png')
         if get_tool:
@@ -113,4 +109,13 @@ class TeamLeader:
         # 处理伏击
         escape = adb.click('temp_images/stage/escape.png')
         if escape:
+            return True
+
+    # 处理自动战斗
+    def auto_fight_confirm(self):
+        adb = self.adb
+        res = adb.wait('temp_images/fight/auto-fight-confirm-1.png', max_wait_time=1).click()
+        if res:
+            print('确认自律战斗')
+            adb.wait('temp_images/fight/auto-fight-confirm-2.png').click()
             return True

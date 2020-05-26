@@ -101,7 +101,14 @@ def fight():
 # 战斗胜利时返回True，失败时返回false
 def fight_finish():
     adb = AutoAdb()
-    adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
+
+    # 等待战斗结束
+    timer = Timer()
+    while True:
+        print('\r等待战斗结束 %ds ...' % timer.get_duration(), end='')
+        if adb.check('temp_images/fight/fight-finish.png'):
+            print(' √ 总耗时: %ds' % timer.get_duration())
+            break
 
     # 战斗结束
     fight_result = None
