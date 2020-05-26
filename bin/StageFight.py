@@ -49,7 +49,7 @@ def confirm_stage_team():
         button_list = [
             'temp_images/stage/immediate-start.png',  # 立刻前往
             'temp_images/stage/weigh-anchor.png',  # 出击按钮
-            'temp_images/fight/fight-confirm.png'  # 特殊关卡会提示更多
+            'temp_images/confirm-btn.png'  # 特殊关卡会提示更多. 点击确定
         ]
         button_loc = adb.get_location(*button_list)
         if button_loc is not None:
