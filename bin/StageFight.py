@@ -1,3 +1,5 @@
+import time
+
 from common import PortUtils, PageUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
@@ -106,6 +108,7 @@ def fight_finish():
     timer = Timer()
     while True:
         print('\r等待战斗结束 %ds ...' % timer.get_duration(), end='')
+        time.sleep(3)
         if adb.check('temp_images/fight/fight-finish.png'):
             print(' √ 总耗时: %ds' % timer.get_duration())
             break
