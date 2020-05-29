@@ -16,7 +16,7 @@ class AutoAdb:
     def __init__(self, test_device=False):
         self.adb_path = PathUtils.get_work_dir() + '/adb/adb.exe'
         if test_device:
-            AutoAdbCheck.test_device(self)
+            AutoAdbCheck.test_device()
 
     def run(self, raw_command):
         adb_host_port = ConfigUtils.get('adb_host_port')
