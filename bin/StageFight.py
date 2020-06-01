@@ -108,7 +108,8 @@ def fight_finish():
     timer = Timer()
     while True:
         print('\r等待战斗结束 %ds ...' % timer.get_duration(), end='')
-        time.sleep(3)
+        skip_dialog()
+        time.sleep(3)  # 每次循环加一个等待时间，降低cpu占用
         if adb.check('temp_images/fight/fight-finish.png'):
             print(' √ 总耗时: %ds' % timer.get_duration())
             break
@@ -165,3 +166,12 @@ def wind_up_stage_fight():
         fight_all_enemy()
         return True
     return False
+
+
+# 跳过剧情
+def skip_dialog():
+    adb = AutoAdb()
+    skipped = adb.click('temp_images/fight/skip-dialog.png')
+    if skipped:
+        print('跳过剧情 》》》')
+        adb.click('temp_images/confirm-btn.png')
