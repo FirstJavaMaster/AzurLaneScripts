@@ -59,6 +59,9 @@ class TeamLeader:
                 # 有时没找到敌人是已经进入确认界面了
                 if adb.check('temp_images/fight/fight.png'):
                     return True
+                if adb.check('temp_images/page/in-operation.png'):
+                    print('误入演习界面, 退出...')
+                    PageUtils.back()
                 # 滑动界面寻找敌人
                 slider.slide()
                 continue
