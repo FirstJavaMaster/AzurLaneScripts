@@ -3,7 +3,10 @@ import subprocess
 from common import ConfigUtils
 
 
-def test_device(auto_adb):
+def test_device():
+    from common.AutoAdb import AutoAdb
+    auto_adb = AutoAdb()
+
     print('ADB PATH >>>> ' + auto_adb.adb_path)
     try:
         subprocess.Popen([auto_adb.adb_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -75,3 +78,7 @@ def check_other(auto_adb):
     print("系统类型: " + output)
     output = auto_adb.run('shell getprop ro.build.version.release')
     print('系统版本: ' + output)
+
+
+if __name__ == '__main__':
+    test_device()

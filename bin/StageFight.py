@@ -1,3 +1,5 @@
+import time
+
 from common import PortUtils, PageUtils
 from common.AutoAdb import AutoAdb
 from common.Location import Location
@@ -49,7 +51,7 @@ def confirm_stage_team():
         button_list = [
             'temp_images/stage/immediate-start.png',  # 立刻前往
             'temp_images/stage/weigh-anchor.png',  # 出击按钮
-            'temp_images/fight/fight-confirm.png'  # 特殊关卡会提示更多
+            'temp_images/confirm-btn.png'  # 特殊关卡会提示更多. 点击确定
         ]
         button_loc = adb.get_location(*button_list)
         if button_loc is not None:
@@ -101,7 +103,16 @@ def fight():
 # 战斗胜利时返回True，失败时返回false
 def fight_finish():
     adb = AutoAdb()
-    adb.wait('temp_images/fight/fight-finish.png', cycle_interval=5)
+
+    # 等待战斗结束
+    timer = Timer()
+    while True:
+        print('\r等待战斗结束 %ds ...' % timer.get_duration(), end='')
+        skip_dialog()
+        time.sleep(3)  # 每次循环加一个等待时间，降低cpu占用
+        if adb.check('temp_images/fight/fight-finish.png'):
+            print(' √ 总耗时: %ds' % timer.get_duration())
+            break
 
     # 战斗结束
     fight_result = None
@@ -155,3 +166,12 @@ def wind_up_stage_fight():
         fight_all_enemy()
         return True
     return False
+
+
+# 跳过剧情
+def skip_dialog():
+    adb = AutoAdb()
+    skipped = adb.click('temp_images/fight/skip-dialog.png')
+    if skipped:
+        print('跳过剧情 》》》')
+        adb.click('temp_images/confirm-btn.png')
