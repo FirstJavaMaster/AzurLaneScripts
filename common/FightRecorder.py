@@ -9,6 +9,7 @@ class FightRecorder:
         win_count = self.fight_result_list.count(True)
         fail_count = self.fight_result_list.count(False)
         win_rate = round(win_count / len(self.fight_result_list), ) * 100
+        print('战斗结果记录: ' + str(self.fight_result_list))
         print('关卡战斗次数累计：%d. 失败次数累计: %d. 胜率: %d.' % (win_count, fail_count, win_rate))
 
     def get_total_count(self):
